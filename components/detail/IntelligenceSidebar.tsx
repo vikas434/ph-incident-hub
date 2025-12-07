@@ -146,33 +146,63 @@ export default function IntelligenceSidebar({
             const isActive = selectedProgram === program || (selectedProgram === null && program === "All");
             const programColors = program !== "All" ? getProgramColor(program) : null;
             
+            // Tooltip text based on program type
+            const getTooltipText = (prog: string) => {
+              if (prog === "All") {
+                return `Show all ${totalCount} incidents`;
+              }
+              const programDescriptions: Record<string, string> = {
+                "Customer Reported": "Incidents reported directly by customers",
+                "Asia Inspection": "Quality inspections conducted in Asia",
+                "Deluxing": "Deluxing process quality checks",
+                "X-Ray QC": "X-Ray quality control inspections",
+                "Returns": "Products returned by customers",
+                "QC": "General quality control checks",
+                "Pre-Shipment Inspection": "Inspections before shipping",
+                "Inbound QC": "Quality checks on inbound shipments",
+                "Warehouse Audit": "Warehouse audit findings",
+                "Supplier Audit": "Supplier audit results",
+                "Random Sampling": "Random sampling quality tests",
+                "Batch Testing": "Batch testing quality checks",
+              };
+              return `${programDescriptions[prog] || prog} - ${count} incident${count !== 1 ? 's' : ''}`;
+            };
+            
             return (
-              <button
-                key={program}
-                onClick={() => onProgramChange(program === "All" ? null : program)}
-                className={`w-full text-left px-4 py-3 rounded-md transition-all ${
-                  isActive
-                    ? programColors 
-                      ? `${programColors.bg} border-2 ${programColors.border} ${programColors.text}`
-                      : "bg-purple-50 border-2 border-purple-600 text-purple-900"
-                    : "bg-white border border-slate-200 text-gray-700 hover:bg-slate-50 hover:shadow-sm"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">{program}</span>
-                  <span
-                    className={`text-xs px-2 py-1 rounded-full ${
-                      isActive
-                        ? programColors
-                          ? `${programColors.bg} ${programColors.text} border ${programColors.border}`
-                          : "bg-purple-600 text-white"
-                        : "bg-slate-100 text-gray-600"
-                    }`}
-                  >
-                    {count}
-                  </span>
+              <div key={program} className="group relative">
+                <button
+                  onClick={() => onProgramChange(program === "All" ? null : program)}
+                  className={`w-full text-left px-4 py-3 rounded-md transition-all ${
+                    isActive
+                      ? programColors 
+                        ? `${programColors.bg} border-2 ${programColors.border} ${programColors.text}`
+                        : "bg-purple-50 border-2 border-purple-600 text-purple-900"
+                      : "bg-white border border-slate-200 text-gray-700 hover:bg-slate-50 hover:shadow-sm"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">{program}</span>
+                    <span
+                      className={`text-xs px-2 py-1 rounded-full ${
+                        isActive
+                          ? programColors
+                            ? `${programColors.bg} ${programColors.text} border ${programColors.border}`
+                            : "bg-purple-600 text-white"
+                          : "bg-slate-100 text-gray-600"
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </div>
+                </button>
+                {/* Tooltip on hover */}
+                <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 shadow-lg">
+                  {getTooltipText(program)}
+                  <div className="absolute right-full top-1/2 transform -translate-y-1/2 -mr-1">
+                    <div className="border-4 border-transparent border-r-gray-900"></div>
+                  </div>
                 </div>
-              </button>
+              </div>
             );
           })}
         </div>
