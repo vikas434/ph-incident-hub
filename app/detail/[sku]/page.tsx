@@ -14,7 +14,7 @@ export default function DetailPage() {
   const router = useRouter();
   const productID = params.sku as string; // Product ID from URL
   const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
-  const [imageLimit, setImageLimit] = useState<number | null>(10);
+  const [imageLimit, setImageLimit] = useState<number | null>(5);
   const [sku, setSku] = useState<SKU | null>(null);
   const [loading, setLoading] = useState(true);
 
