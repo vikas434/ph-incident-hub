@@ -7,8 +7,8 @@ import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("xyz@xyz.com");
+  const [password, setPassword] = useState("PartnerHome2025!");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -84,7 +84,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-gray-900 placeholder-gray-400"
-                  placeholder="supplier@example.com"
+                  placeholder="xyz@xyz.com"
                 />
               </div>
             </div>
@@ -106,7 +106,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-gray-900 placeholder-gray-400"
-                  placeholder="Enter your password"
+                  placeholder="PartnerHome2025!"
                 />
               </div>
             </div>
@@ -154,9 +154,19 @@ export default function LoginPage() {
 
           {/* Demo Credentials */}
           <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-xs text-center text-gray-500">
-              Demo Mode: Enter any email and password to continue
+            <p className="text-xs text-center text-gray-500 mb-2">
+              Demo Mode: Credentials pre-filled for quick access
             </p>
+            <div className="bg-gray-50 rounded-lg p-3 text-xs text-gray-600">
+              <div className="flex items-center justify-between">
+                <span className="font-medium">Email:</span>
+                <span className="font-mono">xyz@xyz.com</span>
+              </div>
+              <div className="flex items-center justify-between mt-1">
+                <span className="font-medium">Password:</span>
+                <span className="font-mono">PartnerHome2025!</span>
+              </div>
+            </div>
           </div>
         </div>
 
