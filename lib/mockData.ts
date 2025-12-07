@@ -47,6 +47,8 @@ export const mockSKUs: SKU[] = [
     aiInsight: "Pattern Detected",
     aiRootCause: "Color mismatch between product samples and final production batches. Packaging failures observed in 15% of inspected units.",
     aiDefectTypes: ["Color Mismatch", "Packaging Failure"],
+    wayfairSKU: "WF-12345-ABC",
+    productID: "sku-001",
     evidence: [
       {
         id: "ev-1",
@@ -92,6 +94,8 @@ export const mockSKUs: SKU[] = [
     aiInsight: "Pattern Detected",
     aiRootCause: "Surface finish inconsistencies and wood grain misalignment detected across multiple batches.",
     aiDefectTypes: ["Surface Finish", "Grain Misalignment"],
+    wayfairSKU: "WF-67890-XYZ",
+    productID: "sku-002",
     evidence: [
       {
         id: "ev-20",
@@ -128,6 +132,8 @@ export const mockSKUs: SKU[] = [
     aiInsight: "Pattern Detected",
     aiRootCause: "Hardware attachment issues and drawer mechanism failures.",
     aiDefectTypes: ["Hardware Issue", "Mechanism Failure"],
+    wayfairSKU: "WF-11111-DEF",
+    productID: "sku-003",
     evidence: [
       {
         id: "ev-30",
@@ -164,6 +170,8 @@ export const mockSKUs: SKU[] = [
     aiInsight: "Pattern Detected",
     aiRootCause: "Weather resistance coating failures and structural integrity concerns in outdoor conditions.",
     aiDefectTypes: ["Coating Failure", "Structural Defect"],
+    wayfairSKU: "WF-22222-GHI",
+    productID: "sku-004",
     evidence: [
       {
         id: "ev-40",
@@ -218,6 +226,8 @@ export const mockSKUs: SKU[] = [
     aiInsight: "Pattern Detected",
     aiRootCause: "Ergonomic adjustment mechanism failures and fabric wear issues.",
     aiDefectTypes: ["Mechanism Failure", "Fabric Wear"],
+    wayfairSKU: "WF-33333-JKL",
+    productID: "sku-005",
     evidence: [
       {
         id: "ev-50",
