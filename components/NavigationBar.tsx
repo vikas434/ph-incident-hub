@@ -66,12 +66,6 @@ export default function NavigationBar() {
             >
               Dashboard
             </Link>
-            <Link
-              href="/analytics"
-              className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
-            >
-              Analytics
-            </Link>
             <div className="flex items-center space-x-3 pl-4 border-l border-gray-200">
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
