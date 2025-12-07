@@ -266,6 +266,7 @@ export default function HighRiskTable() {
         </table>
       </div>
     </div>
+    </>
   );
 }
 
