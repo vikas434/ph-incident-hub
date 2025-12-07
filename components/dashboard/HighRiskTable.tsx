@@ -27,7 +27,7 @@ export default function HighRiskTable() {
 
   const highRiskSKUs = skus
     .filter((sku) => sku.isCritical)
-    .sort((a, b) => b.incidentRate - a.incidentRate)
+    .sort((a, b) => b.financialExposure - a.financialExposure) // Sort by GIE Exposure descending (highest impact first)
     .slice(0, 15); // Top 15 high-risk
 
   if (loading) {
@@ -86,7 +86,16 @@ export default function HighRiskTable() {
                 Incident Rate
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                GIE Exposure
+                <div className="flex items-center space-x-1 group relative">
+                  <span>GIE Exposure</span>
+                  <div className="w-4 h-4 rounded-full bg-purple-100 flex items-center justify-center cursor-help">
+                    <span className="text-xs text-purple-600 font-bold">?</span>
+                  </div>
+                  <div className="absolute left-0 top-full mt-2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl">
+                    <p className="font-semibold mb-1">GIE Exposure</p>
+                    <p>Goods Inspection Expense - Total financial impact including deductions, returns, replacements, and customer service costs. Higher values indicate greater financial risk.</p>
+                  </div>
+                </div>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 AI Insight
@@ -151,7 +160,7 @@ export default function HighRiskTable() {
                   <Badge variant="critical">{sku.incidentRate}%</Badge>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="text-sm font-semibold text-gray-900">
+                  <span className="text-sm font-bold text-red-600">
                     {formatCurrency(sku.financialExposure)}
                   </span>
                 </td>
