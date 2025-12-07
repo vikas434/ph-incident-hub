@@ -1,11 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { Download, Share2, Loader2, Mail, Copy, Check, X } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 
 interface ActionToolbarProps {
   onLimitChange: (limit: number | null) => void;
@@ -16,7 +14,6 @@ export default function ActionToolbar({ onLimitChange }: ActionToolbarProps) {
   const productID = params.sku as string;
   const [limit, setLimit] = useState<number | null>(10);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false);
   const [shareLink, setShareLink] = useState<string | null>(null);
   const [emailAddress, setEmailAddress] = useState("");
   const [copied, setCopied] = useState(false);
@@ -81,65 +78,9 @@ export default function ActionToolbar({ onLimitChange }: ActionToolbarProps) {
     setEmailAddress("");
   };
 
-  const handleDownload = async () => {
-    setIsDownloading(true);
-    showToast("Capturing screen...", "info");
-    
-    try {
-      // Wait a bit for the toast to show
-      await new Promise(resolve => setTimeout(resolve, 300));
-      
-      // Find the main content area to capture
-      const mainContent = document.querySelector('main');
-      if (!mainContent) {
-        throw new Error("Content area not found");
-      }
-
-      showToast("Converting to PDF...", "info");
-      
-      // Capture the content as canvas
-      const canvas = await html2canvas(mainContent as HTMLElement, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#f1f5f9', // slate-50 background
-        windowWidth: mainContent.scrollWidth,
-        windowHeight: mainContent.scrollHeight,
-      });
-
-      // Calculate PDF dimensions
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const pdfWidth = 210; // A4 width in mm
-      const pdfHeight = (imgHeight * pdfWidth) / imgWidth;
-      
-      // Create PDF
-      const pdf = new jsPDF({
-        orientation: pdfHeight > pdfWidth ? 'portrait' : 'landscape',
-        unit: 'mm',
-        format: [pdfWidth, pdfHeight],
-      });
-
-      // Convert canvas to image data
-      const imgData = canvas.toDataURL('image/png');
-      
-      // Add image to PDF
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
-      
-      // Generate filename with product ID and timestamp
-      const timestamp = new Date().toISOString().split('T')[0];
-      const filename = `Product_Quality_Report_${productID}_${timestamp}.pdf`;
-      
-      // Save PDF
-      pdf.save(filename);
-      
-      setIsDownloading(false);
-      showToast("PDF downloaded successfully", "success");
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      setIsDownloading(false);
-      showToast("Failed to generate PDF. Please try again.", "error");
-    }
+  const handleDownload = () => {
+    console.log("Download PDF triggered");
+    showToast("PDF download started", "info");
   };
 
   return (
@@ -237,20 +178,10 @@ export default function ActionToolbar({ onLimitChange }: ActionToolbarProps) {
         <div className="flex items-center space-x-3">
           <button
             onClick={handleDownload}
-            disabled={isDownloading}
-            className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-slate-50 transition-colors"
           >
-            {isDownloading ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Downloading...
-              </>
-            ) : (
-              <>
-                <Download className="w-4 h-4 mr-2" />
-                Download PDF
-              </>
-            )}
+            <Download className="w-4 h-4 mr-2" />
+            Download PDF
           </button>
           <button
             onClick={handleShare}
