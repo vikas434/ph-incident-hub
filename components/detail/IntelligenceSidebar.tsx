@@ -24,6 +24,37 @@ export default function IntelligenceSidebar({
 
   return (
     <div className="space-y-6">
+      {/* Product Information */}
+      <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+        <h3 className="text-sm font-semibold text-gray-900 mb-4">
+          Product Information
+        </h3>
+        <div className="space-y-3">
+          {sku.poNumber && (
+            <div className="flex flex-col">
+              <span className="text-xs text-gray-500 mb-1">PO Number</span>
+              <span className="text-sm font-medium text-gray-900">{sku.poNumber}</span>
+            </div>
+          )}
+          {sku.wayfairSKU && (
+            <div className="flex flex-col">
+              <span className="text-xs text-gray-500 mb-1">Wayfair SKU</span>
+              <span className="text-sm font-medium text-gray-900">{sku.wayfairSKU}</span>
+            </div>
+          )}
+          {sku.productID && (
+            <div className="flex flex-col">
+              <span className="text-xs text-gray-500 mb-1">Product ID</span>
+              <span className="text-sm font-medium text-gray-900">{sku.productID}</span>
+            </div>
+          )}
+          <div className="flex flex-col pt-2 border-t border-slate-200">
+            <span className="text-xs text-gray-500 mb-1">SKU</span>
+            <span className="text-sm font-medium text-gray-900">{sku.sku}</span>
+          </div>
+        </div>
+      </div>
+
       {/* AI Root Cause Card */}
       <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-3">
@@ -79,4 +110,3 @@ export default function IntelligenceSidebar({
     </div>
   );
 }
-
