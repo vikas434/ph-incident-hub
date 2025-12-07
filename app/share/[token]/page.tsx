@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { SKU } from "@/lib/types";
+import { SKU, Evidence, Program, Severity } from "@/lib/types";
 import DetailHeader from "@/components/detail/DetailHeader";
 import IntelligenceSidebar from "@/components/detail/IntelligenceSidebar";
 import EvidenceGallery from "@/components/detail/EvidenceGallery";
@@ -42,6 +42,64 @@ export default function SharePage() {
     }
   }, [token]);
 
+  // Generate dummy evidence to fill the space when needed
+  const generateDummyEvidence = (count: number, baseId: string, existingPrograms: string[]): Evidence[] => {
+    const programs: Program[] = [
+      "Customer Reported",
+      "Asia Inspection",
+      "Deluxing",
+      "X-Ray QC",
+      "Returns",
+      "QC",
+      "Pre-Shipment Inspection",
+      "Inbound QC",
+      "Warehouse Audit",
+      "Supplier Audit",
+      "Random Sampling",
+      "Batch Testing",
+    ];
+    
+    const defectTypes = [
+      "Surface Defect",
+      "Structural Issue",
+      "Packaging Damage",
+      "Color Mismatch",
+      "Finish Quality",
+      "Assembly Problem",
+      "Material Defect",
+      "Contamination",
+    ];
+    
+    const severities: Severity[] = ["Critical", "High", "Medium", "Low"];
+    
+    // Use programs not already in use, or cycle through all programs
+    const availablePrograms = programs.filter(p => !existingPrograms.includes(p));
+    const programsToUse = availablePrograms.length > 0 ? availablePrograms : programs;
+    
+    return Array.from({ length: count }, (_, index) => {
+      const programIndex = index % programsToUse.length;
+      const program = programsToUse[programIndex];
+      const severity = severities[index % severities.length];
+      const defectType = defectTypes[index % defectTypes.length];
+      const daysAgo = 30 + (index * 2); // Spread dates over time
+      const date = new Date();
+      date.setDate(date.getDate() - daysAgo);
+      
+      // Use placeholder images from Unsplash
+      const imageId = 1500000000 + (index * 1000);
+      
+      return {
+        id: `dummy-${baseId}-${index}`,
+        imageUrl: `https://images.unsplash.com/photo-${imageId}?w=800&h=600&fit=crop`,
+        severity,
+        program,
+        date: date.toISOString().split('T')[0],
+        defectType,
+        note: `Sample ${defectType.toLowerCase()} detected during ${program.toLowerCase()}`,
+      };
+    });
+  };
+
   const filteredEvidence = useMemo(() => {
     if (!sku) return [];
     
@@ -51,7 +109,13 @@ export default function SharePage() {
       evidence = evidence.filter((e) => e.program === selectedProgram);
     }
     
-    if (imageLimit !== null) {
+    // If limit is set and we have less evidence than the limit, add dummy evidence
+    if (imageLimit !== null && evidence.length < imageLimit) {
+      const needed = imageLimit - evidence.length;
+      const existingPrograms = evidence.map(e => e.program);
+      const dummyEvidence = generateDummyEvidence(needed, sku.id, existingPrograms);
+      evidence = [...evidence, ...dummyEvidence];
+    } else if (imageLimit !== null) {
       evidence = evidence.slice(0, imageLimit);
     }
     
