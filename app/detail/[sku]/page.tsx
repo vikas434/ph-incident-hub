@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { mockSKUs } from "@/lib/mockData";
+import { SKU } from "@/lib/types";
 import DetailHeader from "@/components/detail/DetailHeader";
 import ActionToolbar from "@/components/detail/ActionToolbar";
 import IntelligenceSidebar from "@/components/detail/IntelligenceSidebar";
@@ -10,24 +10,29 @@ import EvidenceGallery from "@/components/detail/EvidenceGallery";
 
 export default function DetailPage() {
   const params = useParams();
-  const skuId = params.sku as string;
+  const productID = params.sku as string; // Product ID from URL
   const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
   const [imageLimit, setImageLimit] = useState<number | null>(10);
+  const [sku, setSku] = useState<SKU | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const sku = mockSKUs.find((s) => s.id === skuId);
+  useEffect(() => {
+    fetch(`/api/skus/${productID}`)
+      .then(res => res.json())
+      .then(data => {
+        setSku(data.sku || null);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching SKU:', err);
+        setLoading(false);
+      });
+  }, [productID]);
 
-  if (!sku) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">SKU Not Found</h1>
-          <p className="text-gray-600">The requested SKU could not be found.</p>
-        </div>
-      </div>
-    );
-  }
-
+  // Move useMemo before conditional returns to follow Rules of Hooks
   const filteredEvidence = useMemo(() => {
+    if (!sku) return [];
+    
     let evidence = sku.evidence;
     
     if (selectedProgram && selectedProgram !== "All") {
@@ -39,7 +44,28 @@ export default function DetailPage() {
     }
     
     return evidence;
-  }, [sku.evidence, selectedProgram, imageLimit]);
+  }, [sku, selectedProgram, imageLimit]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-500">Loading SKU data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!sku) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">SKU Not Found</h1>
+          <p className="text-gray-600">The requested Product ID ({productID}) could not be found.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-slate-50">
