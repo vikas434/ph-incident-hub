@@ -11,6 +11,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'assets.wfcdn.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+      },
     ],
   },
 }
