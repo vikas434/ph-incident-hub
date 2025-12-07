@@ -68,9 +68,16 @@ export default function HighRiskTable() {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-slate-200">
       <div className="px-6 py-4 border-b border-slate-200">
-        <h2 className="text-lg font-semibold text-gray-900">
-          High Incident SKU List (The Yellow Zone)
-        </h2>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">
+              High Incident SKU List (The Yellow Zone)
+            </h2>
+            <p className="text-xs text-gray-500 mt-1">
+              Sorted by GIE Exposure (highest financial impact first)
+            </p>
+          </div>
+        </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full">
