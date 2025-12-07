@@ -136,7 +136,7 @@ export default function HighRiskTable() {
             </div>
           </div>
         </div>
-      <div className="overflow-x-auto">
+        <div className="overflow-x-auto">
         <table className="w-full">
           <thead className="bg-slate-50">
             <tr>
