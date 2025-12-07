@@ -9,6 +9,22 @@ interface IntelligenceSidebarProps {
   onProgramChange: (program: string | null) => void;
 }
 
+// All possible programs defined in the system
+const ALL_PROGRAMS: Program[] = [
+  "Customer Reported",
+  "Asia Inspection",
+  "Deluxing",
+  "X-Ray QC",
+  "Returns",
+  "QC",
+  "Pre-Shipment Inspection",
+  "Inbound QC",
+  "Warehouse Audit",
+  "Supplier Audit",
+  "Random Sampling",
+  "Batch Testing",
+];
+
 const getProgramColor = (program: string) => {
   const colors: Record<string, { bg: string; text: string; border: string }> = {
     "Customer Reported": { bg: "bg-red-100", text: "text-red-800", border: "border-red-300" },
@@ -32,12 +48,14 @@ export default function IntelligenceSidebar({
   selectedProgram,
   onProgramChange,
 }: IntelligenceSidebarProps) {
+  // Count incidents per program
   const programCounts = sku.evidence.reduce((acc, ev) => {
     acc[ev.program] = (acc[ev.program] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
 
-  const allPrograms = ["All", ...Object.keys(programCounts)];
+  // Include all possible programs, even if they have zero counts
+  const allPrograms = ["All", ...ALL_PROGRAMS];
   const totalCount = sku.evidence.length;
 
   return (
