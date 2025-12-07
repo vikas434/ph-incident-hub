@@ -6,7 +6,13 @@ export type Program =
   | "Deluxing"
   | "X-Ray QC"
   | "Returns"
-  | "QC";
+  | "QC"
+  | "Pre-Shipment Inspection"
+  | "Inbound QC"
+  | "Warehouse Audit"
+  | "Supplier Audit"
+  | "Random Sampling"
+  | "Batch Testing";
 
 export interface Evidence {
   id: string;

@@ -48,15 +48,21 @@ export default function HighRiskTable() {
   };
 
   const getProgramColor = (program: string) => {
-    const colors: Record<string, string> = {
-      "Customer Reported": "bg-red-500",
-      "Asia Inspection": "bg-blue-500",
-      "Deluxing": "bg-yellow-500",
-      "X-Ray QC": "bg-purple-500",
-      Returns: "bg-orange-500",
-      QC: "bg-green-500",
+    const colors: Record<string, { bg: string; text: string; border: string }> = {
+      "Customer Reported": { bg: "bg-red-100", text: "text-red-800", border: "border-red-300" },
+      "Asia Inspection": { bg: "bg-blue-100", text: "text-blue-800", border: "border-blue-300" },
+      "Deluxing": { bg: "bg-yellow-100", text: "text-yellow-800", border: "border-yellow-300" },
+      "X-Ray QC": { bg: "bg-purple-100", text: "text-purple-800", border: "border-purple-300" },
+      "Returns": { bg: "bg-orange-100", text: "text-orange-800", border: "border-orange-300" },
+      "QC": { bg: "bg-green-100", text: "text-green-800", border: "border-green-300" },
+      "Pre-Shipment Inspection": { bg: "bg-indigo-100", text: "text-indigo-800", border: "border-indigo-300" },
+      "Inbound QC": { bg: "bg-cyan-100", text: "text-cyan-800", border: "border-cyan-300" },
+      "Warehouse Audit": { bg: "bg-pink-100", text: "text-pink-800", border: "border-pink-300" },
+      "Supplier Audit": { bg: "bg-teal-100", text: "text-teal-800", border: "border-teal-300" },
+      "Random Sampling": { bg: "bg-amber-100", text: "text-amber-800", border: "border-amber-300" },
+      "Batch Testing": { bg: "bg-emerald-100", text: "text-emerald-800", border: "border-emerald-300" },
     };
-    return colors[program] || "bg-gray-500";
+    return colors[program] || { bg: "bg-gray-100", text: "text-gray-800", border: "border-gray-300" };
   };
 
   return (
@@ -115,15 +121,30 @@ export default function HighRiskTable() {
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center space-x-1">
-                    {sku.programsFlagged.map((program, idx) => (
-                      <div
-                        key={idx}
-                        className={`w-3 h-3 rounded-full ${getProgramColor(program)}`}
-                        title={program}
-                      />
-                    ))}
+                <td className="px-6 py-4">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {sku.programsFlagged.map((program, idx) => {
+                      const colors = getProgramColor(program);
+                      return (
+                        <div
+                          key={idx}
+                          className={`group relative inline-flex items-center px-2.5 py-1 rounded-md border ${colors.bg} ${colors.border} ${colors.text} text-xs font-medium cursor-help transition-all hover:scale-105 hover:shadow-sm`}
+                          title={`${program} - Click to filter by this program`}
+                        >
+                          <span className="truncate max-w-[120px]">{program}</span>
+                          {/* Tooltip on hover */}
+                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 shadow-lg">
+                            {program}
+                            <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
+                              <div className="border-4 border-transparent border-t-gray-900"></div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {sku.programsFlagged.length === 0 && (
+                      <span className="text-xs text-gray-400">No programs flagged</span>
+                    )}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
