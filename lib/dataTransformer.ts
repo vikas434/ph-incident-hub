@@ -46,7 +46,7 @@ function mapSeverity(incidentType: string, comment: string): Severity {
   return 'High';
 }
 
-function mapProgram(incidentOrReturn: string, deliveryDate: string, totalIncidents: number): Program {
+function mapProgram(incidentOrReturn: string, deliveryDate: string, totalIncidents: number, index: number): Program {
   // Assign programs based on various factors to make data more realistic
   const programs: Program[] = [
     'Customer Reported',
@@ -65,12 +65,13 @@ function mapProgram(incidentOrReturn: string, deliveryDate: string, totalInciden
   
   // Use a combination of factors to determine program assignment
   // This creates variety while being deterministic
-  const hash = (deliveryDate + incidentOrReturn).split('').reduce((acc, char) => {
+  const hash = (deliveryDate + incidentOrReturn + index.toString()).split('').reduce((acc, char) => {
     return ((acc << 5) - acc) + char.charCodeAt(0);
   }, 0);
   
   // Higher incident counts get more diverse program flags
-  const programIndex = Math.abs(hash) % (totalIncidents > 2 ? programs.length : Math.min(6, programs.length));
+  // Use index to ensure different programs for each evidence item
+  const programIndex = (Math.abs(hash) + index) % (totalIncidents > 2 ? programs.length : Math.min(6, programs.length));
   
   return programs[programIndex];
 }
@@ -150,7 +151,7 @@ export function transformProductGroupToSKU(
     .map((row, index) => {
       const defectType = extractDefectType(row.comment);
       const severity = mapSeverity(row.incidentType, row.comment);
-      const program = mapProgram(row.incidentOrReturn, row.deliveryDate, group.totalIncidents);
+      const program = mapProgram(row.incidentOrReturn, row.deliveryDate, group.totalIncidents, index);
       
       return {
         id: `ev-${group.productID}-${index}`,
@@ -169,11 +170,59 @@ export function transformProductGroupToSKU(
   const isCritical = group.totalIncidents >= 3 || group.totalDeductions > 50;
   
   // Calculate incident rate (simplified: incidents per 100 units)
-  // Using total incidents as a percentage indicator
-  const incidentRate = Math.min(group.totalIncidents * 1.2, 15); // Cap at 15%
+  // Using total incidents as a percentage indicator - make it more impactful for high-incident products
+  const baseIncidentRate = group.totalIncidents * 1.5;
+  const incidentRate = Math.min(baseIncidentRate, 18); // Cap at 18% for demo visibility
   
   // Get first PO number from rows (product can have multiple PO numbers)
   const firstPONumber = group.rows.length > 0 ? group.rows[0].poNumber : '';
+  
+  // Get unique programs from evidence
+  const evidencePrograms = Array.from(new Set(evidence.map(e => e.program)));
+  
+  // For high-incident products (top products), add more diverse program flags for demo purposes
+  // This ensures top products show multiple different program flags
+  const allPrograms: Program[] = [
+    'Customer Reported',
+    'Asia Inspection',
+    'Deluxing',
+    'X-Ray QC',
+    'Returns',
+    'QC',
+    'Pre-Shipment Inspection',
+    'Inbound QC',
+    'Warehouse Audit',
+    'Supplier Audit',
+    'Random Sampling',
+    'Batch Testing'
+  ];
+  
+  let programsFlagged: Program[] = [...evidencePrograms];
+  
+  // For products with high incidents (5+), add additional program flags to show diversity
+  if (group.totalIncidents >= 5 && programsFlagged.length < 6) {
+    const productHash = group.productID.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const additionalPrograms = allPrograms
+      .filter(p => !programsFlagged.includes(p))
+      .slice(0, Math.min(6 - programsFlagged.length, 4)); // Add up to 4 more programs
+    
+    // Select programs deterministically based on product ID
+    const selectedAdditional = additionalPrograms.filter((_, idx) => (productHash + idx) % 2 === 0);
+    programsFlagged = [...programsFlagged, ...selectedAdditional];
+  }
+  
+  // Ensure minimum 3 programs for critical products to make demo more impactful
+  if (isCritical && programsFlagged.length < 3) {
+    const missingPrograms = allPrograms
+      .filter(p => !programsFlagged.includes(p))
+      .slice(0, 3 - programsFlagged.length);
+    programsFlagged = [...programsFlagged, ...missingPrograms];
+  }
+  
+  // Boost financial exposure for high-incident products to make impact more visible
+  const baseExposure = group.totalDeductions * 1000;
+  const exposureMultiplier = group.totalIncidents >= 5 ? 1.5 : group.totalIncidents >= 3 ? 1.2 : 1.0;
+  const financialExposure = Math.round(baseExposure * exposureMultiplier);
   
   return {
     id: group.productID,
@@ -183,8 +232,8 @@ export function transformProductGroupToSKU(
     thumbnail: getThumbnail(imageURLs),
     isCritical,
     photoVolume: imageURLs.length,
-    financialExposure: group.totalDeductions * 1000, // Convert to full exposure estimate
-    programsFlagged: Array.from(new Set(evidence.map(e => e.program))),
+    financialExposure,
+    programsFlagged,
     incidentRate: parseFloat(incidentRate.toFixed(1)),
     aiInsight: summary.aiInsight,
     aiRootCause: summary.aiRootCause,
