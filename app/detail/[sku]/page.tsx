@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { isAuthenticated } from "@/lib/auth";
 import { SKU } from "@/lib/types";
 import DetailHeader from "@/components/detail/DetailHeader";
 import ActionToolbar from "@/components/detail/ActionToolbar";
@@ -10,6 +11,7 @@ import EvidenceGallery from "@/components/detail/EvidenceGallery";
 
 export default function DetailPage() {
   const params = useParams();
+  const router = useRouter();
   const productID = params.sku as string; // Product ID from URL
   const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
   const [imageLimit, setImageLimit] = useState<number | null>(10);
@@ -17,6 +19,10 @@ export default function DetailPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push("/login");
+      return;
+    }
     fetch(`/api/skus/${productID}`)
       .then(res => res.json())
       .then(data => {
