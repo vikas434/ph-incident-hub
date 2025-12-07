@@ -12,7 +12,7 @@ interface ActionToolbarProps {
 export default function ActionToolbar({ onLimitChange }: ActionToolbarProps) {
   const params = useParams();
   const productID = params.sku as string;
-  const [limit, setLimit] = useState<number | null>(10);
+  const [limit, setLimit] = useState<number | null>(5);
   const [isGenerating, setIsGenerating] = useState(false);
   const [shareLink, setShareLink] = useState<string | null>(null);
   const [emailAddress, setEmailAddress] = useState("");
