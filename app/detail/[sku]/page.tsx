@@ -78,12 +78,13 @@ export default function DetailPage() {
       const date = new Date();
       date.setDate(date.getDate() - daysAgo);
       
-      // Use placeholder images from Unsplash
-      const imageId = 1500000000 + (index * 1000);
+      // Use placeholder images from Lorem Picsum (reliable placeholder service)
+      // Different image IDs for variety
+      const imageId = 200 + (index * 10);
       
       return {
         id: `dummy-${baseId}-${index}`,
-        imageUrl: `https://images.unsplash.com/photo-${imageId}?w=800&h=600&fit=crop`,
+        imageUrl: `https://picsum.photos/800/600?random=${imageId}`,
         severity,
         program,
         date: date.toISOString().split('T')[0],
