@@ -12,10 +12,17 @@ export default function NavigationBar() {
   const [authenticated, setAuthenticated] = useState(false);
   const [supplierName, setSupplierName] = useState("XYZ Supplier");
 
+  // Always call hooks in the same order - no conditional returns before hooks
   useEffect(() => {
-    setAuthenticated(isAuthenticated());
+    const authStatus = isAuthenticated();
+    setAuthenticated(authStatus);
     setSupplierName(getSupplierName() || "XYZ Supplier");
-  }, []);
+    
+    // Redirect to login if not authenticated (but not if already on login page)
+    if (!authStatus && pathname !== "/login") {
+      router.push("/login");
+    }
+  }, [pathname, router]);
 
   const handleLogout = () => {
     logout();
@@ -27,13 +34,7 @@ export default function NavigationBar() {
     return null;
   }
 
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!authenticated && pathname !== "/login") {
-      router.push("/login");
-    }
-  }, [authenticated, pathname, router]);
-
+  // Don't show navbar if not authenticated
   if (!authenticated) {
     return null;
   }
