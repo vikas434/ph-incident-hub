@@ -70,9 +70,26 @@ export default function HighRiskTable() {
       <div className="px-6 py-4 border-b border-slate-200">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">
-              High Incident SKU List (The Yellow Zone)
-            </h2>
+            <div className="flex items-center space-x-2">
+              <h2 className="text-lg font-semibold text-gray-900">
+                High Incident SKU List (The Yellow Zone)
+              </h2>
+              <div className="group relative">
+                <div className="w-4 h-4 rounded-full bg-yellow-100 flex items-center justify-center cursor-help">
+                  <span className="text-xs text-yellow-600 font-bold">?</span>
+                </div>
+                <div className="absolute left-0 top-full mt-2 w-72 p-3 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl">
+                  <p className="font-semibold mb-2">The Yellow Zone</p>
+                  <p className="mb-2">Products flagged as high-risk requiring immediate attention:</p>
+                  <ul className="list-disc list-inside space-y-1 ml-2">
+                    <li>3+ incidents reported</li>
+                    <li>Deductions exceeding $50</li>
+                    <li>Multiple quality program flags</li>
+                  </ul>
+                  <p className="mt-2 text-yellow-300">⚠️ Action required to prevent escalation</p>
+                </div>
+              </div>
+            </div>
             <p className="text-xs text-gray-500 mt-1">
               Sorted by GIE Exposure (highest financial impact first)
             </p>
