@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, ChevronRight } from "lucide-react";
+import { CheckCircle2, ChevronRight, Sparkles, Loader2 } from "lucide-react";
 import { SKU } from "@/lib/types";
 import Badge from "@/components/ui/Badge";
 import Image from "next/image";
@@ -11,6 +11,7 @@ export default function HighRiskTable() {
   const router = useRouter();
   const [skus, setSkus] = useState<SKU[]>([]);
   const [loading, setLoading] = useState(true);
+  const [analyzingSkuId, setAnalyzingSkuId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/skus')
@@ -47,6 +48,16 @@ export default function HighRiskTable() {
     }).format(value);
   };
 
+  const handleAnalyze = (e: React.MouseEvent, skuId: string) => {
+    e.stopPropagation(); // Prevent row click
+    setAnalyzingSkuId(skuId);
+    
+    // Show loading for 1 second, then navigate
+    setTimeout(() => {
+      router.push(`/detail/${skuId}`);
+    }, 1000);
+  };
+
   const getProgramColor = (program: string) => {
     const colors: Record<string, { bg: string; text: string; border: string }> = {
       "Customer Reported": { bg: "bg-red-100", text: "text-red-800", border: "border-red-300" },
@@ -66,36 +77,65 @@ export default function HighRiskTable() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-slate-200">
-      <div className="px-6 py-4 border-b border-slate-200">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center space-x-2">
-              <h2 className="text-lg font-semibold text-gray-900">
-                High Incident SKU List (The Yellow Zone)
-              </h2>
-              <div className="group relative">
-                <div className="w-4 h-4 rounded-full bg-yellow-100 flex items-center justify-center cursor-help">
-                  <span className="text-xs text-yellow-600 font-bold">?</span>
-                </div>
-                <div className="absolute left-0 top-full mt-2 w-72 p-3 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl">
-                  <p className="font-semibold mb-2">The Yellow Zone</p>
-                  <p className="mb-2">Products flagged as high-risk requiring immediate attention:</p>
-                  <ul className="list-disc list-inside space-y-1 ml-2">
-                    <li>3+ incidents reported</li>
-                    <li>Deductions exceeding $50</li>
-                    <li>Multiple quality program flags</li>
-                  </ul>
-                  <p className="mt-2 text-yellow-300">⚠️ Action required to prevent escalation</p>
-                </div>
+    <>
+      {/* Generative AI Analysis Loading Overlay */}
+      {analyzingSkuId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-8 max-w-md mx-4">
+            <div className="flex flex-col items-center space-y-4">
+              <div className="relative">
+                <Sparkles className="w-12 h-12 text-purple-600 animate-pulse" />
+                <Loader2 className="w-8 h-8 text-purple-600 animate-spin absolute -top-2 -right-2" />
+              </div>
+              <div className="text-center">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Generative AI Analysis
+                </h3>
+                <p className="text-sm text-gray-600 mb-1">
+                  Analyzing product incidents and evidence...
+                </p>
+                <p className="text-xs text-gray-500">
+                  Using AI to identify root causes and recommend actions
+                </p>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                <div className="bg-purple-600 h-full rounded-full animate-pulse" style={{ width: '75%' }}></div>
               </div>
             </div>
-            <p className="text-xs text-gray-500 mt-1">
-              Sorted by GIE Exposure (highest financial impact first)
-            </p>
           </div>
         </div>
-      </div>
+      )}
+
+      <div className="bg-white rounded-lg shadow-sm border border-slate-200">
+        <div className="px-6 py-4 border-b border-slate-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center space-x-2">
+                <h2 className="text-lg font-semibold text-gray-900">
+                  High Incident SKU List (The Yellow Zone)
+                </h2>
+                <div className="group relative">
+                  <div className="w-4 h-4 rounded-full bg-yellow-100 flex items-center justify-center cursor-help">
+                    <span className="text-xs text-yellow-600 font-bold">?</span>
+                  </div>
+                  <div className="absolute left-0 top-full mt-2 w-72 p-3 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl">
+                    <p className="font-semibold mb-2">The Yellow Zone</p>
+                    <p className="mb-2">Products flagged as high-risk requiring immediate attention:</p>
+                    <ul className="list-disc list-inside space-y-1 ml-2">
+                      <li>3+ incidents reported</li>
+                      <li>Deductions exceeding $50</li>
+                      <li>Multiple quality program flags</li>
+                    </ul>
+                    <p className="mt-2 text-yellow-300">⚠️ Action required to prevent escalation</p>
+                  </div>
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Sorted by GIE Exposure (highest financial impact first)
+              </p>
+            </div>
+          </div>
+        </div>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead className="bg-slate-50">
@@ -201,10 +241,23 @@ export default function HighRiskTable() {
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <button className="inline-flex items-center text-sm text-purple-600 hover:text-purple-700 font-medium">
-                    Analyze
-                    <ChevronRight className="w-4 h-4 ml-1" />
+                <td className="px-6 py-4 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                  <button 
+                    onClick={(e) => handleAnalyze(e, sku.id)}
+                    disabled={analyzingSkuId === sku.id}
+                    className="inline-flex items-center text-sm text-purple-600 hover:text-purple-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+                  >
+                    {analyzingSkuId === sku.id ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                        Analyzing...
+                      </>
+                    ) : (
+                      <>
+                        Analyze
+                        <ChevronRight className="w-4 h-4 ml-1" />
+                      </>
+                    )}
                   </button>
                 </td>
               </tr>
