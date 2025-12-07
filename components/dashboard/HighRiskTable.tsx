@@ -1,17 +1,42 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, ChevronRight } from "lucide-react";
-import { mockSKUs } from "@/lib/mockData";
+import { SKU } from "@/lib/types";
 import Badge from "@/components/ui/Badge";
 import Image from "next/image";
 
 export default function HighRiskTable() {
   const router = useRouter();
-  const highRiskSKUs = mockSKUs
+  const [skus, setSkus] = useState<SKU[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/skus')
+      .then(res => res.json())
+      .then(data => {
+        setSkus(data.skus || []);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching SKUs:', err);
+        setLoading(false);
+      });
+  }, []);
+
+  const highRiskSKUs = skus
     .filter((sku) => sku.isCritical)
     .sort((a, b) => b.incidentRate - a.incidentRate)
-    .slice(0, 15); // Bottom 15% / Top 15 high-risk
+    .slice(0, 15); // Top 15 high-risk
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-12 text-center">
+        <p className="text-gray-500">Loading SKU data...</p>
+      </div>
+    );
+  }
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("en-US", {
