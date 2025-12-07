@@ -148,6 +148,9 @@ export function transformProductGroupToSKU(
   // Using total incidents as a percentage indicator
   const incidentRate = Math.min(group.totalIncidents * 1.2, 15); // Cap at 15%
   
+  // Get first PO number from rows (product can have multiple PO numbers)
+  const firstPONumber = group.rows.length > 0 ? group.rows[0].poNumber : '';
+  
   return {
     id: group.productID,
     sku: group.productID,
@@ -163,6 +166,9 @@ export function transformProductGroupToSKU(
     aiRootCause: summary.aiRootCause,
     aiDefectTypes: summary.aiDefectTypes,
     evidence,
+    poNumber: firstPONumber,
+    wayfairSKU: group.wayfairSKU,
+    productID: group.productID,
   };
 }
 

@@ -35,11 +35,26 @@ export default function EvidenceCard({ evidence }: EvidenceCardProps) {
     });
   };
 
+  const handleClick = () => {
+    if (evidence.imageUrl) {
+      window.open(evidence.imageUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <div
       className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
     >
       {/* Image Container */}
       <div className="relative h-48 bg-slate-100 overflow-hidden">

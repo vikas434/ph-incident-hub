@@ -4,8 +4,8 @@ import NavigationBar from "@/components/NavigationBar";
 import { ToastProvider } from "@/components/ui/Toast";
 
 export const metadata: Metadata = {
-  title: "Incident Photo Hub - PartnerHome",
-  description: "Enterprise SaaS dashboard for managing supplier incident photos",
+  title: "Partner Home - XYZ Supplier",
+  description: "Supplier portal for managing incident photos and product quality",
 };
 
 export default function RootLayout({

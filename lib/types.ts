@@ -40,5 +40,8 @@ export interface SKU {
   aiRootCause: string;
   aiDefectTypes: string[];
   evidence: Evidence[];
+  poNumber?: string;
+  wayfairSKU: string;
+  productID: string;
 }
 
