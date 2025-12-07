@@ -53,9 +53,6 @@ export default function LoginPage() {
           <p className="text-sm text-gray-600">
             Supplier Portal Login
           </p>
-          <p className="text-xs text-gray-500 mt-2">
-            Welcome back, XYZ Supplier
-          </p>
         </div>
 
         {/* Login Form */}
