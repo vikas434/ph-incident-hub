@@ -124,7 +124,14 @@ export function generateSummary(group: ProductGroup): SummaryResult {
     group.rows.map(row => row.comment).filter(c => c && c.trim() !== '')
   );
   
-  const aiInsight = incidentCount > 1 ? 'Pattern Detected' : 'Single Incident';
+  // Generate more executive-friendly insights
+  const financialImpact = group.totalDeductions > 0 ? `$${group.totalDeductions.toFixed(2)}` : 'N/A';
+  const severityLevel = incidentCount >= 5 ? 'Critical' : incidentCount >= 3 ? 'High Priority' : incidentCount > 1 ? 'Pattern Detected' : 'Single Incident';
+  
+  const aiInsight = incidentCount > 1 
+    ? `${severityLevel} • ${incidentCount} incidents • ${financialImpact} impact`
+    : `Single Incident • ${financialImpact} impact`;
+  
   const aiRootCause = generateRootCause(group);
   
   return {

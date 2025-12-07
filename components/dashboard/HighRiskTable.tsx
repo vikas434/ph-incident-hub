@@ -155,10 +155,17 @@ export default function HighRiskTable() {
                     {formatCurrency(sku.financialExposure)}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-500" />
-                    <span className="text-sm text-gray-700">{sku.aiInsight}</span>
+                <td className="px-6 py-4">
+                  <div className="flex items-start space-x-2">
+                    <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <span className="text-sm text-gray-900 font-medium block">{sku.aiInsight.split(' • ')[0]}</span>
+                      {sku.aiInsight.includes(' • ') && (
+                        <span className="text-xs text-gray-500 mt-1 block">
+                          {sku.aiInsight.split(' • ').slice(1).join(' • ')}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
