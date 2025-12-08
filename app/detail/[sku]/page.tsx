@@ -241,16 +241,31 @@ export default function DetailPage() {
     const availablePrograms = programs.filter(p => !existingPrograms.includes(p));
     const programsToUse = availablePrograms.length > 0 ? availablePrograms : programs;
     
+    // Program distribution for first 5 items: 2x Customer Reported, 1x Deluxing, 1x X-Ray QC, 1x Inbound QC
+    const firstFivePrograms: Program[] = [
+      'Customer Reported',
+      'Customer Reported',
+      'Deluxing',
+      'X-Ray QC',
+      'Inbound QC'
+    ];
+    
     return Array.from({ length: count }, (_, index) => {
       // Cycle through evidence scenarios to get realistic combinations
       const scenarioIndex = index % evidenceScenarios.length;
       const scenario = evidenceScenarios[scenarioIndex];
       
-      // Override program if needed to match available programs
-      let program = scenario.program;
-      if (!programsToUse.includes(program as Program)) {
-        const programIndex = index % programsToUse.length;
-        program = programsToUse[programIndex];
+      // Use specific program distribution for first 5 items
+      let program: Program;
+      if (index < 5) {
+        program = firstFivePrograms[index];
+      } else {
+        // For items beyond 5, use scenario program or fall back to available programs
+        program = scenario.program;
+        if (!programsToUse.includes(program as Program)) {
+          const programIndex = index % programsToUse.length;
+          program = programsToUse[programIndex];
+        }
       }
       
       // Generate varied dates - spread over last 90 days with some randomness

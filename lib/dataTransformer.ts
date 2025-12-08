@@ -196,6 +196,15 @@ export function transformProductGroupToSKU(
     (defect: string, program: string, date: string) => `${program} inspection revealed ${defect.toLowerCase()} on product`,
   ];
   
+  // Program distribution for first 5 items: 2x Customer Reported, 1x Deluxing, 1x X-Ray QC, 1x Inbound QC
+  const firstFivePrograms: Program[] = [
+    'Customer Reported',
+    'Customer Reported',
+    'Deluxing',
+    'X-Ray QC',
+    'Inbound QC'
+  ];
+  
   const evidence: Evidence[] = group.rows
     .filter(row => isValidImageURL(row.imageURL))
     .map((row, index) => {
@@ -231,7 +240,11 @@ export function transformProductGroupToSKU(
       }
       
       const severity = mapSeverity(row.incidentType, row.comment);
-      const program = mapProgram(row.incidentOrReturn, row.deliveryDate, group.totalIncidents, index);
+      
+      // Use specific program distribution for first 5 items, then fall back to mapProgram
+      const program = index < 5 
+        ? firstFivePrograms[index] 
+        : mapProgram(row.incidentOrReturn, row.deliveryDate, group.totalIncidents, index);
       
       // Use varied date instead of raw deliveryDate
       const evidenceDate = dateVariations[index] || (() => {
