@@ -35,6 +35,40 @@ export default function EvidenceCard({ evidence }: EvidenceCardProps) {
     });
   };
 
+  // Creative overlay text based on defect type
+  const getOverlayText = (defectType: string): string => {
+    const overlayTexts: Record<string, string> = {
+      'Surface Defect': 'Surface Quality Issue',
+      'Structural Issue': 'Structural Damage Detected',
+      'Packaging Damage': 'Packaging Compromised',
+      'Color Mismatch': 'Color Inconsistency',
+      'Finish Quality': 'Finish Quality Issue',
+      'Finish Quality Issue': 'Finish Quality Issue',
+      'Assembly Problem': 'Assembly Defect',
+      'Material Defect': 'Material Quality Issue',
+      'Contamination': 'Contamination Found',
+      'Scratch': 'Surface Scratch',
+      'Dent': 'Surface Dent',
+      'Crack': 'Structural Crack',
+      'Chip': 'Material Chip',
+      'Warping': 'Warped Component',
+      'Misalignment': 'Misaligned Parts',
+      'Peeling Finish': 'Finish Peeling',
+      'Discoloration': 'Color Discoloration',
+      'Missing Parts': 'Missing Components',
+      'Loose Parts': 'Loose Assembly',
+      'Stain': 'Surface Stain',
+      'Odor': 'Odor Issue',
+      'Mold': 'Mold Contamination',
+      'Paint Defect': 'Paint Quality Issue',
+      'Water Damage': 'Water Damage',
+      'Broken Component': 'Broken Part',
+      'Torn Material': 'Torn Material',
+    };
+    
+    return overlayTexts[defectType] || defectType;
+  };
+
   const handleClick = () => {
     if (evidence.imageUrl) {
       window.open(evidence.imageUrl, '_blank', 'noopener,noreferrer');
@@ -87,7 +121,7 @@ export default function EvidenceCard({ evidence }: EvidenceCardProps) {
 
         {/* Defect Type Overlay */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
-          <span className="text-white text-xs font-medium">{evidence.defectType}</span>
+          <span className="text-white text-xs font-medium">{getOverlayText(evidence.defectType)}</span>
         </div>
 
         {/* Hover Overlay */}
