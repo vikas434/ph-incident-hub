@@ -89,7 +89,7 @@ export default function ExecutiveSummary() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div className="bg-white rounded-lg p-4 border border-purple-100">
             <div className="flex items-center space-x-3">
               <div className="bg-red-100 rounded-lg p-2">
@@ -113,29 +113,6 @@ export default function ExecutiveSummary() {
                 <p className="text-xs text-gray-500 mb-1">Avg Incident Rate</p>
                 <p className="text-xl font-bold text-gray-900">
                   {summary.avgIncidentRate}% <span className="text-sm font-normal text-green-600">↓ 3.2%</span>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg p-4 border border-purple-100">
-            <div className="flex items-center space-x-3">
-              <div className="bg-orange-100 rounded-lg p-2">
-                <Lightbulb className="w-5 h-5 text-orange-600" />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center space-x-1 group relative">
-                  <p className="text-xs text-gray-500 mb-1">GIE Opportunity</p>
-                  <div className="w-3 h-3 rounded-full bg-purple-100 flex items-center justify-center cursor-help">
-                    <span className="text-xs text-purple-600 font-bold">?</span>
-                  </div>
-                  <div className="absolute left-0 top-full mt-2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl">
-                    <p className="font-semibold mb-1">GIE Opportunity</p>
-                    <p>Goods Inspection Expense - Total financial impact including deductions, returns, replacements, and customer service costs. Higher values indicate greater financial risk and potential cost savings through quality improvements.</p>
-                  </div>
-                </div>
-                <p className="text-xl font-bold text-gray-900">
-                  {formatCurrency(summary.gieOpportunity)}
                 </p>
               </div>
             </div>
