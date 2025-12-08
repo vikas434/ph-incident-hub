@@ -26,12 +26,6 @@ export default function DetailHeader({ sku, name, manufacturer, poNumber, wayfai
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-1">{name}</h1>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-600">
-            {poNumber && (
-              <>
-                <span>PO Number: <span className="font-medium text-gray-900">{poNumber}</span></span>
-                <span>•</span>
-              </>
-            )}
             {wayfairSKU && (
               <>
                 <span>Wayfair SKU: <span className="font-medium text-gray-900">{wayfairSKU}</span></span>
