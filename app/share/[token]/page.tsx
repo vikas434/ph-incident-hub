@@ -77,24 +77,34 @@ export default function SharePage() {
     const programsToUse = availablePrograms.length > 0 ? availablePrograms : programs;
     
     return Array.from({ length: count }, (_, index) => {
+      // Use index-based selection to ensure variety, cycling through arrays
       const programIndex = index % programsToUse.length;
       const program = programsToUse[programIndex];
-      const severity = severities[index % severities.length];
-      const defectType = defectTypes[index % defectTypes.length];
-      const daysAgo = 30 + (index * 2); // Spread dates over time
+      const severityIndex = index % severities.length;
+      const severity = severities[severityIndex];
+      const defectIndex = index % defectTypes.length;
+      const defectType = defectTypes[defectIndex];
+      
+      // Generate varied dates - spread over last 90 days with some randomness
+      const baseDaysAgo = 5 + (index * 3); // Start from 5 days ago, increment by 3
+      const randomOffset = Math.floor(Math.random() * 7); // Add 0-6 days randomness
+      const daysAgo = Math.min(90, baseDaysAgo + randomOffset);
       const date = new Date();
       date.setDate(date.getDate() - daysAgo);
       
       // Use the specified Unsplash image for dummy evidence
       // Using the brown wooden framed yellow padded chair image from https://unsplash.com/photos/brown-wooden-framed-yellow-padded-chair-_HqHX3LBN18
+      // Add random parameter to ensure unique image URLs
+      const imageRandom = Math.floor(Math.random() * 1000);
+      
       return {
         id: `dummy-${baseId}-${index}`,
-        imageUrl: `https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&q=80`,
+        imageUrl: `https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&q=80&random=${imageRandom}`,
         severity,
         program,
         date: date.toISOString().split('T')[0],
         defectType,
-        note: `Sample ${defectType.toLowerCase()} detected during ${program.toLowerCase()}`,
+        note: `Incident: ${defectType.toLowerCase()} detected during ${program.toLowerCase()} inspection`,
       };
     });
   };
