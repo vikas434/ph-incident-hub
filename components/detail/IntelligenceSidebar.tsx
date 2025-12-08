@@ -123,20 +123,24 @@ export default function IntelligenceSidebar({
               const colors = getProgramColor(program);
               const count = programCounts[program] || 0;
               const isActive = selectedProgram === program;
+              const hasIncidents = count > 0;
               return (
                 <button
                   key={idx}
                   onClick={() => onProgramChange(program)}
-                  className={`group relative inline-flex items-center px-2.5 py-1 rounded-md border transition-all hover:scale-105 hover:shadow-sm ${
+                  disabled={!hasIncidents}
+                  className={`group relative inline-flex items-center px-2.5 py-1 rounded-md border transition-all ${
+                    hasIncidents ? 'hover:scale-105 hover:shadow-sm cursor-pointer' : 'opacity-60 cursor-not-allowed'
+                  } ${
                     isActive
                       ? `${colors.bg} ${colors.border} ${colors.text} ring-2 ring-purple-500 ring-offset-1`
-                      : `${colors.bg} ${colors.border} ${colors.text} cursor-pointer`
+                      : `${colors.bg} ${colors.border} ${colors.text}`
                   }`}
                   title={`${program} - ${count} incidents flagged`}
                 >
                   <span className="truncate max-w-[140px]">{program}</span>
                   <span className={`ml-1.5 px-1.5 py-0.5 rounded-full text-xs font-bold ${
-                    isActive ? 'bg-purple-600 text-white' : 'bg-white/50'
+                    isActive ? 'bg-purple-600 text-white' : hasIncidents ? 'bg-white/50' : 'bg-gray-200 text-gray-500'
                   }`}>
                     {count}
                   </span>
@@ -146,9 +150,16 @@ export default function IntelligenceSidebar({
                     <div className="text-gray-300 mt-1">
                       {count} incident{count !== 1 ? 's' : ''} flagged
                     </div>
-                    <div className="text-purple-300 mt-1 text-xs">
-                      Click to filter
-                    </div>
+                    {hasIncidents && (
+                      <div className="text-purple-300 mt-1 text-xs">
+                        Click to filter
+                      </div>
+                    )}
+                    {!hasIncidents && (
+                      <div className="text-gray-400 mt-1 text-xs">
+                        No incidents yet
+                      </div>
+                    )}
                     <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
                       <div className="border-4 border-transparent border-t-gray-900"></div>
                     </div>
