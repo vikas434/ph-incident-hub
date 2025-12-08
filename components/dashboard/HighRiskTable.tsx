@@ -13,7 +13,7 @@ export default function HighRiskTable() {
   const [loading, setLoading] = useState(true);
   const [analyzingSkuId, setAnalyzingSkuId] = useState<string | null>(null);
   const [dateFilter, setDateFilter] = useState<string>("12months"); // Default: Last 12 months
-  const [sortBy, setSortBy] = useState<string>("exposure"); // Default: Sort by GIE Exposure
+  const [sortBy, setSortBy] = useState<string>("sku"); // Default: Sort by SKU Number
 
   useEffect(() => {
     fetch('/api/skus')
@@ -77,17 +77,12 @@ export default function HighRiskTable() {
     let sorted = [...filteredSKUs];
     
     // Apply sorting based on selected option
-    if (sortBy === "sku") {
-      // Sort alphabetically by SKU number
-      sorted.sort((a, b) => {
-        const skuA = a.sku || a.name || "";
-        const skuB = b.sku || b.name || "";
-        return skuA.localeCompare(skuB);
-      });
-    } else {
-      // Default: Sort by GIE Exposure descending (highest impact first)
-      sorted.sort((a, b) => b.financialExposure - a.financialExposure);
-    }
+    // Sort alphabetically by SKU number
+    sorted.sort((a, b) => {
+      const skuA = a.sku || a.name || "";
+      const skuB = b.sku || b.name || "";
+      return skuA.localeCompare(skuB);
+    });
     
     return sorted.slice(0, 15); // Top 15 high-risk
   }, [filteredSKUs, sortBy]);
@@ -191,9 +186,6 @@ export default function HighRiskTable() {
                   </div>
                 </div>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
-                Sorted by GIE Exposure (highest financial impact first)
-              </p>
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
@@ -203,7 +195,6 @@ export default function HighRiskTable() {
                   onChange={(e) => setSortBy(e.target.value)}
                   className="border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
                 >
-                  <option value="exposure">Sort by GIE Exposure</option>
                   <option value="sku">Sort by SKU Number</option>
                 </select>
               </div>
@@ -236,18 +227,6 @@ export default function HighRiskTable() {
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Incident Rate
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <div className="flex items-center space-x-1 group relative">
-                  <span>GIE Exposure</span>
-                  <div className="w-4 h-4 rounded-full bg-purple-100 flex items-center justify-center cursor-help">
-                    <span className="text-xs text-purple-600 font-bold">?</span>
-                  </div>
-                  <div className="absolute left-0 top-full mt-2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl">
-                    <p className="font-semibold mb-1">GIE Exposure</p>
-                    <p>Goods Inspection Expense - Total financial impact including deductions, returns, replacements, and customer service costs. Higher values indicate greater financial risk.</p>
-                  </div>
-                </div>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 AI Insight
@@ -310,11 +289,6 @@ export default function HighRiskTable() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <Badge variant="critical">{sku.incidentRate}%</Badge>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="text-sm font-bold text-red-600">
-                    {formatCurrency(sku.financialExposure)}
-                  </span>
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-start space-x-2">

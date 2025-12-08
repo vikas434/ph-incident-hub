@@ -79,7 +79,7 @@ export default function KPIScorecard() {
   return (
     <div className="space-y-6 mb-8">
       {/* Primary KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <KPICard
           label="Critical SKUs"
           value={kpis.criticalSKUs}
@@ -97,15 +97,6 @@ export default function KPIScorecard() {
           trend={photosTrend}
           trendLabel="vs last month"
           subtitle="Total evidence collected"
-        />
-        <KPICard
-          label="GIE Opportunity"
-          value={formatCurrency(kpis.gieOpportunity)}
-          icon={DollarSign}
-          bgColor="bg-orange-50"
-          trend={gieTrend}
-          trendLabel="vs last month"
-          subtitle="Potential cost savings"
         />
       </div>
       
