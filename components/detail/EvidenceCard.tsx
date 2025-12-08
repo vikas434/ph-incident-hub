@@ -85,9 +85,9 @@ export default function EvidenceCard({ evidence }: EvidenceCardProps) {
           </Badge>
         </div>
 
-        {/* Program Overlay */}
+        {/* Defect Type Overlay */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
-          <span className="text-white text-xs font-medium">{evidence.program}</span>
+          <span className="text-white text-xs font-medium">{evidence.defectType}</span>
         </div>
 
         {/* Hover Overlay */}
