@@ -9,13 +9,13 @@ import ExecutiveSummary from "@/components/dashboard/ExecutiveSummary";
 
 export default function Dashboard() {
   const router = useRouter();
-  const [supplierName, setSupplierName] = useState("XYZ Supplier");
+  const [supplierName, setSupplierName] = useState("ABC Manufacturer");
 
   useEffect(() => {
     if (!isAuthenticated()) {
       router.push("/login");
     } else {
-      setSupplierName(getSupplierName() || "XYZ Supplier");
+      setSupplierName(getSupplierName() || "ABC Manufacturer");
     }
   }, [router]);
 

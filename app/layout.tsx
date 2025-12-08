@@ -4,7 +4,7 @@ import NavigationBar from "@/components/NavigationBar";
 import { ToastProvider } from "@/components/ui/Toast";
 
 export const metadata: Metadata = {
-  title: "Partner Home - XYZ Supplier",
+  title: "Partner Home - ABC Manufacturer",
   description: "Supplier portal for managing incident photos and product quality",
 };
 
