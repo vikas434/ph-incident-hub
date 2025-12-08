@@ -57,31 +57,201 @@ export default function DetailPage() {
       "Batch Testing",
     ];
     
-    const defectTypes = [
-      "Surface Defect",
-      "Structural Issue",
-      "Packaging Damage",
-      "Color Mismatch",
-      "Finish Quality",
-      "Assembly Problem",
-      "Material Defect",
-      "Contamination",
+    // Realistic image URLs mapped to defect types and scenarios
+    const evidenceScenarios = [
+      // Surface Defects
+      {
+        defectType: "Surface Defect",
+        program: "Customer Reported",
+        severity: "High" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&q=80",
+        note: "Customer reported visible scratches and scuff marks on product surface",
+      },
+      {
+        defectType: "Surface Defect",
+        program: "Returns",
+        severity: "Medium" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop&q=80",
+        note: "Returned item shows surface imperfections and finish inconsistencies",
+      },
+      {
+        defectType: "Surface Defect",
+        program: "QC",
+        severity: "High" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=800&h=600&fit=crop&q=80",
+        note: "Quality control inspection identified surface blemishes and finish defects",
+      },
+      // Structural Issues
+      {
+        defectType: "Structural Issue",
+        program: "Customer Reported",
+        severity: "Critical" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=800&h=600&fit=crop&q=80",
+        note: "Customer reported structural damage - frame appears warped and unstable",
+      },
+      {
+        defectType: "Structural Issue",
+        program: "Asia Inspection",
+        severity: "Critical" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&h=600&fit=crop&q=80",
+        note: "Pre-shipment inspection found structural integrity concerns",
+      },
+      {
+        defectType: "Structural Issue",
+        program: "X-Ray QC",
+        severity: "High" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&q=80",
+        note: "X-Ray inspection revealed internal structural anomalies",
+      },
+      // Packaging Damage
+      {
+        defectType: "Packaging Damage",
+        program: "Returns",
+        severity: "Medium" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1604917018707-72a5d0a8b3b3?w=800&h=600&fit=crop&q=80",
+        note: "Product returned due to damaged packaging and potential product impact",
+      },
+      {
+        defectType: "Packaging Damage",
+        program: "Inbound QC",
+        severity: "Low" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1604917018707-72a5d0a8b3b3?w=800&h=600&fit=crop&q=80",
+        note: "Inbound quality check identified packaging damage during warehouse receipt",
+      },
+      {
+        defectType: "Packaging Damage",
+        program: "Warehouse Audit",
+        severity: "Medium" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1604917018707-72a5d0a8b3b3?w=800&h=600&fit=crop&q=80",
+        note: "Warehouse audit found packaging integrity issues in storage",
+      },
+      // Color Mismatch
+      {
+        defectType: "Color Mismatch",
+        program: "Customer Reported",
+        severity: "High" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop&q=80",
+        note: "Customer complaint: product color does not match advertised specifications",
+      },
+      {
+        defectType: "Color Mismatch",
+        program: "Deluxing",
+        severity: "Medium" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=800&h=600&fit=crop&q=80",
+        note: "Deluxing process identified color variations between units",
+      },
+      {
+        defectType: "Color Mismatch",
+        program: "Pre-Shipment Inspection",
+        severity: "High" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop&q=80",
+        note: "Pre-shipment inspection flagged color inconsistency in batch",
+      },
+      // Finish Quality
+      {
+        defectType: "Finish Quality",
+        program: "Customer Reported",
+        severity: "Medium" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&q=80",
+        note: "Customer reported poor finish quality - uneven coating and rough texture",
+      },
+      {
+        defectType: "Finish Quality",
+        program: "QC",
+        severity: "High" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=800&h=600&fit=crop&q=80",
+        note: "Quality control inspection found finish defects and coating issues",
+      },
+      {
+        defectType: "Finish Quality",
+        program: "Supplier Audit",
+        severity: "Medium" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop&q=80",
+        note: "Supplier audit identified finish quality inconsistencies in production",
+      },
+      // Assembly Problem
+      {
+        defectType: "Assembly Problem",
+        program: "Customer Reported",
+        severity: "Critical" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=800&h=600&fit=crop&q=80",
+        note: "Customer reported assembly issues - parts not fitting correctly",
+      },
+      {
+        defectType: "Assembly Problem",
+        program: "Returns",
+        severity: "High" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&h=600&fit=crop&q=80",
+        note: "Returned item has assembly defects - misaligned components",
+      },
+      {
+        defectType: "Assembly Problem",
+        program: "Asia Inspection",
+        severity: "High" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&q=80",
+        note: "Asia inspection found assembly quality issues before shipment",
+      },
+      // Material Defect
+      {
+        defectType: "Material Defect",
+        program: "Customer Reported",
+        severity: "Critical" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop&q=80",
+        note: "Customer reported material defects - visible cracks and weaknesses",
+      },
+      {
+        defectType: "Material Defect",
+        program: "X-Ray QC",
+        severity: "Critical" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=800&h=600&fit=crop&q=80",
+        note: "X-Ray QC detected material defects and internal flaws",
+      },
+      {
+        defectType: "Material Defect",
+        program: "Batch Testing",
+        severity: "High" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=800&h=600&fit=crop&q=80",
+        note: "Batch testing revealed material quality issues in sample",
+      },
+      // Contamination
+      {
+        defectType: "Contamination",
+        program: "Customer Reported",
+        severity: "High" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&h=600&fit=crop&q=80",
+        note: "Customer reported foreign material contamination on product",
+      },
+      {
+        defectType: "Contamination",
+        program: "Inbound QC",
+        severity: "Medium" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1604917018707-72a5d0a8b3b3?w=800&h=600&fit=crop&q=80",
+        note: "Inbound QC inspection found contamination during warehouse receipt",
+      },
+      {
+        defectType: "Contamination",
+        program: "Random Sampling",
+        severity: "High" as Severity,
+        imageUrl: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop&q=80",
+        note: "Random sampling test identified contamination in product batch",
+      },
     ];
-    
-    const severities: Severity[] = ["Critical", "High", "Medium", "Low"];
     
     // Use programs not already in use, or cycle through all programs
     const availablePrograms = programs.filter(p => !existingPrograms.includes(p));
     const programsToUse = availablePrograms.length > 0 ? availablePrograms : programs;
     
     return Array.from({ length: count }, (_, index) => {
-      // Use index-based selection to ensure variety, cycling through arrays
-      const programIndex = index % programsToUse.length;
-      const program = programsToUse[programIndex];
-      const severityIndex = index % severities.length;
-      const severity = severities[severityIndex];
-      const defectIndex = index % defectTypes.length;
-      const defectType = defectTypes[defectIndex];
+      // Cycle through evidence scenarios to get realistic combinations
+      const scenarioIndex = index % evidenceScenarios.length;
+      const scenario = evidenceScenarios[scenarioIndex];
+      
+      // Override program if needed to match available programs
+      let program = scenario.program;
+      if (!programsToUse.includes(program as Program)) {
+        const programIndex = index % programsToUse.length;
+        program = programsToUse[programIndex];
+      }
       
       // Generate varied dates - spread over last 90 days with some randomness
       const baseDaysAgo = 5 + (index * 3); // Start from 5 days ago, increment by 3
@@ -90,19 +260,14 @@ export default function DetailPage() {
       const date = new Date();
       date.setDate(date.getDate() - daysAgo);
       
-      // Use the specified Unsplash image for dummy evidence
-      // Using the brown wooden framed yellow padded chair image from https://unsplash.com/photos/brown-wooden-framed-yellow-padded-chair-_HqHX3LBN18
-      // Add random parameter to ensure unique image URLs
-      const imageRandom = Math.floor(Math.random() * 1000);
-      
       return {
         id: `dummy-${baseId}-${index}`,
-        imageUrl: `https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&q=80&random=${imageRandom}`,
-        severity,
-        program,
+        imageUrl: scenario.imageUrl,
+        severity: scenario.severity,
+        program: program as Program,
         date: date.toISOString().split('T')[0],
-        defectType,
-        note: `Incident: ${defectType.toLowerCase()} detected during ${program.toLowerCase()} inspection`,
+        defectType: scenario.defectType,
+        note: scenario.note,
       };
     });
   };
