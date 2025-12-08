@@ -9,7 +9,7 @@ interface ActionToolbarProps {
   onLimitChange: (limit: number | null) => void;
 }
 
-export default function ActionToolbar({ onLimitChange }: ActionToolbarProps) {
+export default function ActionToolbar({ onLimitChange, skuData }: ActionToolbarProps) {
   const params = useParams();
   const productID = params.sku as string;
   const [limit, setLimit] = useState<number | null>(5);
@@ -79,9 +79,154 @@ export default function ActionToolbar({ onLimitChange }: ActionToolbarProps) {
     setEmailAddress("");
   };
 
-  const handleDownload = () => {
-    console.log("Download PDF triggered");
-    showToast("PDF download started", "info");
+  const handleDownload = async () => {
+    setIsGenerating(true);
+    showToast("Generating PDF report...", "info");
+    
+    try {
+      // Simulate PDF generation (in a real app, this would call an API)
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Create a simple HTML report that can be printed/saved as PDF
+      const reportContent = generatePDFContent();
+      
+      // Create a blob and trigger download
+      const blob = new Blob([reportContent], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Product_Quality_Report_${productID}_${new Date().toISOString().split('T')[0]}.html`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      showToast("PDF report downloaded successfully", "success");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      showToast("Failed to generate PDF. Please try again.", "error");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const generatePDFContent = (): string => {
+    const productName = skuData?.name || productID;
+    const wayfairSKU = skuData?.wayfairSKU || 'N/A';
+    const manufacturer = skuData?.manufacturer || 'N/A';
+    const evidenceCount = skuData?.evidence?.length || 0;
+    
+    return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Product Quality Report - ${productID}</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      color: #333;
+    }
+    .header {
+      border-bottom: 2px solid #7c3aed;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    .header h1 {
+      color: #7c3aed;
+      margin: 0;
+    }
+    .info-section {
+      margin-bottom: 30px;
+    }
+    .info-row {
+      display: flex;
+      margin-bottom: 10px;
+    }
+    .info-label {
+      font-weight: bold;
+      width: 150px;
+    }
+    .summary {
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+    .evidence-list {
+      margin-top: 20px;
+    }
+    .evidence-item {
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+    }
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #ddd;
+      text-align: center;
+      color: #666;
+      font-size: 12px;
+    }
+    @media print {
+      body { margin: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Product Quality Report</h1>
+    <p>Generated on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+  </div>
+  
+  <div class="info-section">
+    <h2>Product Information</h2>
+    <div class="info-row">
+      <div class="info-label">Product ID:</div>
+      <div>${productID}</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Product Name:</div>
+      <div>${productName}</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Wayfair SKU:</div>
+      <div>${wayfairSKU}</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Manufacturer:</div>
+      <div>${manufacturer}</div>
+    </div>
+  </div>
+  
+  <div class="summary">
+    <h2>Summary</h2>
+    <p><strong>Total Evidence Items:</strong> ${evidenceCount}</p>
+    <p>This report contains quality incident evidence and documentation for the above product.</p>
+  </div>
+  
+  <div class="evidence-list">
+    <h2>Evidence Details</h2>
+    ${skuData?.evidence?.slice(0, limit || 10).map((item: any, idx: number) => `
+      <div class="evidence-item">
+        <h3>Evidence #${idx + 1}</h3>
+        <p><strong>Date:</strong> ${new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+        <p><strong>Defect Type:</strong> ${item.defectType}</p>
+        <p><strong>Program:</strong> ${item.program}</p>
+        <p><strong>Severity:</strong> ${item.severity}</p>
+        <p><strong>Note:</strong> ${item.note || 'N/A'}</p>
+      </div>
+    `).join('') || '<p>No evidence items available.</p>'}
+  </div>
+  
+  <div class="footer">
+    <p>Partner Home - XYZ Supplier Quality Report</p>
+    <p>This is an automated report generated from the Incident Photo Hub system.</p>
+  </div>
+</body>
+</html>`;
   };
 
   return (
