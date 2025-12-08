@@ -85,13 +85,11 @@ export default function SharePage() {
       const date = new Date();
       date.setDate(date.getDate() - daysAgo);
       
-      // Use placeholder images from Lorem Picsum (reliable placeholder service)
-      // Different image IDs for variety
-      const imageId = 200 + (index * 10);
-      
+      // Use the specified Unsplash image for dummy evidence
+      // Using the brown wooden framed yellow padded chair image
       return {
         id: `dummy-${baseId}-${index}`,
-        imageUrl: `https://picsum.photos/800/600?random=${imageId}`,
+        imageUrl: `https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop`,
         severity,
         program,
         date: date.toISOString().split('T')[0],
