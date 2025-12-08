@@ -54,8 +54,8 @@ export default function IntelligenceSidebar({
     return acc;
   }, {} as Record<string, number>);
 
-  // Use actual programs flagged from SKU data
-  const programsFlagged = sku.programsFlagged || [];
+  // Get all programs that have at least one incident (count > 0)
+  const programsFlagged = ALL_PROGRAMS.filter(program => (programCounts[program] || 0) > 0);
 
   // Include all possible programs, even if they have zero counts
   const allPrograms = ["All", ...ALL_PROGRAMS];
@@ -119,14 +119,22 @@ export default function IntelligenceSidebar({
             {programsFlagged.map((program, idx) => {
               const colors = getProgramColor(program);
               const count = programCounts[program] || 0;
+              const isActive = selectedProgram === program;
               return (
-                <div
+                <button
                   key={idx}
-                  className={`group relative inline-flex items-center px-2.5 py-1 rounded-md border ${colors.bg} ${colors.border} ${colors.text} text-xs font-medium cursor-help transition-all hover:scale-105 hover:shadow-sm`}
+                  onClick={() => onProgramChange(program)}
+                  className={`group relative inline-flex items-center px-2.5 py-1 rounded-md border transition-all hover:scale-105 hover:shadow-sm ${
+                    isActive
+                      ? `${colors.bg} ${colors.border} ${colors.text} ring-2 ring-purple-500 ring-offset-1`
+                      : `${colors.bg} ${colors.border} ${colors.text} cursor-pointer`
+                  }`}
                   title={`${program} - ${count} incidents flagged`}
                 >
                   <span className="truncate max-w-[140px]">{program}</span>
-                  <span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-white/50 text-xs font-bold">
+                  <span className={`ml-1.5 px-1.5 py-0.5 rounded-full text-xs font-bold ${
+                    isActive ? 'bg-purple-600 text-white' : 'bg-white/50'
+                  }`}>
                     {count}
                   </span>
                   {/* Tooltip on hover */}
@@ -135,11 +143,14 @@ export default function IntelligenceSidebar({
                     <div className="text-gray-300 mt-1">
                       {count} incident{count !== 1 ? 's' : ''} flagged
                     </div>
+                    <div className="text-purple-300 mt-1 text-xs">
+                      Click to filter
+                    </div>
                     <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
                       <div className="border-4 border-transparent border-t-gray-900"></div>
                     </div>
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>
