@@ -86,10 +86,10 @@ export default function SharePage() {
       date.setDate(date.getDate() - daysAgo);
       
       // Use the specified Unsplash image for dummy evidence
-      // Using the brown wooden framed yellow padded chair image
+      // Using the brown wooden framed yellow padded chair image from https://unsplash.com/photos/brown-wooden-framed-yellow-padded-chair-_HqHX3LBN18
       return {
         id: `dummy-${baseId}-${index}`,
-        imageUrl: `https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop`,
+        imageUrl: `https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&q=80`,
         severity,
         program,
         date: date.toISOString().split('T')[0],
