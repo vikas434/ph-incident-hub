@@ -54,8 +54,11 @@ export default function IntelligenceSidebar({
     return acc;
   }, {} as Record<string, number>);
 
-  // Get all programs that have at least one incident (count > 0)
-  const programsFlagged = ALL_PROGRAMS.filter(program => (programCounts[program] || 0) > 0);
+  // Use all programs flagged from SKU data (as shown in HighRiskTable)
+  // This ensures consistency between table and detail page
+  const programsFlagged = sku.programsFlagged && sku.programsFlagged.length > 0 
+    ? sku.programsFlagged 
+    : ALL_PROGRAMS.filter(program => (programCounts[program] || 0) > 0);
 
   // Include all possible programs, even if they have zero counts
   const allPrograms = ["All", ...ALL_PROGRAMS];
