@@ -67,6 +67,17 @@ export default function EvidenceCard({ evidence }: EvidenceCardProps) {
           }`}
         />
         
+        {/* Dummy Image Watermark */}
+        {evidence.id.startsWith('dummy-') && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+            <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg border-2 border-dashed border-gray-400">
+              <span className="text-xs font-bold text-gray-600 uppercase tracking-wider">
+                Dummy Image
+              </span>
+            </div>
+          </div>
+        )}
+        
         {/* Severity Badge */}
         <div className="absolute top-2 right-2">
           <Badge variant={getSeverityVariant(evidence.severity)}>
