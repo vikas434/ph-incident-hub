@@ -168,7 +168,7 @@ export default function HighRiskTable() {
             <div>
               <div className="flex items-center space-x-2">
                 <h2 className="text-lg font-semibold text-gray-900">
-                  High Incident SKU List (The Yellow Zone)
+                  High Incident SKU List
                 </h2>
                 <div className="group relative">
                   <div className="w-4 h-4 rounded-full bg-yellow-100 flex items-center justify-center cursor-help">
