@@ -199,22 +199,35 @@ export function transformProductGroupToSKU(
   const evidence: Evidence[] = group.rows
     .filter(row => isValidImageURL(row.imageURL))
     .map((row, index) => {
-      // Extract defect type from comment with index for variety
+      // Always use index-based variation to ensure each card has a unique defect type
+      // Use product ID hash + index for deterministic but varied assignment
+      const productHash = group.productID.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+      const commentHash = (row.comment || '').split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+      
+      // Combine hashes to create unique index for this evidence item
+      const uniqueIndex = (productHash + commentHash + index) % defectTypeVariations.length;
+      
+      // Try to extract from comment first, but always ensure variety
       let defectType = extractDefectType(row.comment, index);
       
-      // Ensure variety - if we get a generic type, use variation based on index
-      if (defectType === 'Damage' || defectType === 'Defect' || !defectType) {
-        defectType = defectTypeVariations[index % defectTypeVariations.length];
+      // If extracted type is generic or same as previous, use variation
+      const genericTypes = ['Damage', 'Defect', 'Dent', 'Chip', 'Scratch'];
+      if (genericTypes.includes(defectType) || !defectType) {
+        // Use unique index to ensure each card gets different defect type
+        defectType = defectTypeVariations[uniqueIndex];
+      } else {
+        // Even if we extracted a specific type, mix it with variations for more diversity
+        // Use modulo to cycle through variations while keeping some from comments
+        const mixIndex = (index + uniqueIndex) % defectTypeVariations.length;
+        // Alternate between extracted and variation for more variety
+        if (index % 2 === 0) {
+          defectType = defectTypeVariations[mixIndex];
+        }
       }
       
-      // Add more variety by mixing comment-based and index-based selection
-      // Use hash of comment + index to ensure deterministic but varied results
-      const commentHash = (row.comment || '').split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-      const variationIndex = (commentHash + index) % defectTypeVariations.length;
-      
-      // If comment doesn't provide specific defect, use variation
-      if (!row.comment || row.comment.toLowerCase().includes('damage') || row.comment.toLowerCase().includes('defect')) {
-        defectType = defectTypeVariations[variationIndex];
+      // Final fallback: ensure we always have a unique defect type per index
+      if (!defectType || defectType === 'Damage' || defectType === 'Defect') {
+        defectType = defectTypeVariations[index % defectTypeVariations.length];
       }
       
       const severity = mapSeverity(row.incidentType, row.comment);
