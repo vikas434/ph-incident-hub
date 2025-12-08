@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, ChevronRight, Sparkles, Loader2 } from "lucide-react";
+import { CheckCircle2, ChevronRight, Sparkles, Loader2, Calendar } from "lucide-react";
 import { SKU } from "@/lib/types";
 import Badge from "@/components/ui/Badge";
 import Image from "next/image";
@@ -12,6 +12,7 @@ export default function HighRiskTable() {
   const [skus, setSkus] = useState<SKU[]>([]);
   const [loading, setLoading] = useState(true);
   const [analyzingSkuId, setAnalyzingSkuId] = useState<string | null>(null);
+  const [dateFilter, setDateFilter] = useState<string>("6months"); // Default: Last 6 months
 
   useEffect(() => {
     fetch('/api/skus')
@@ -26,8 +27,52 @@ export default function HighRiskTable() {
       });
   }, []);
 
-  const highRiskSKUs = skus
-    .filter((sku) => sku.isCritical)
+  // Calculate date range based on filter
+  const getDateRange = (filter: string): { startDate: Date; endDate: Date } => {
+    const endDate = new Date();
+    const startDate = new Date();
+    
+    switch (filter) {
+      case "1month":
+        startDate.setMonth(endDate.getMonth() - 1);
+        break;
+      case "3months":
+        startDate.setMonth(endDate.getMonth() - 3);
+        break;
+      case "6months":
+        startDate.setMonth(endDate.getMonth() - 6);
+        break;
+      case "12months":
+        startDate.setMonth(endDate.getMonth() - 12);
+        break;
+      case "all":
+        startDate.setFullYear(2020); // Set to a very early date
+        break;
+      default:
+        startDate.setMonth(endDate.getMonth() - 6);
+    }
+    
+    return { startDate, endDate };
+  };
+
+  // Filter SKUs by date range
+  const filteredSKUs = useMemo(() => {
+    const { startDate, endDate } = getDateRange(dateFilter);
+    
+    return skus.filter((sku) => {
+      if (!sku.isCritical) return false;
+      
+      // Check if SKU has any evidence within the date range
+      const hasEvidenceInRange = sku.evidence.some((ev) => {
+        const evidenceDate = new Date(ev.date);
+        return evidenceDate >= startDate && evidenceDate <= endDate;
+      });
+      
+      return hasEvidenceInRange;
+    });
+  }, [skus, dateFilter]);
+
+  const highRiskSKUs = filteredSKUs
     .sort((a, b) => b.financialExposure - a.financialExposure) // Sort by GIE Exposure descending (highest impact first)
     .slice(0, 15); // Top 15 high-risk
 
@@ -133,6 +178,20 @@ export default function HighRiskTable() {
               <p className="text-xs text-gray-500 mt-1">
                 Sorted by GIE Exposure (highest financial impact first)
               </p>
+            </div>
+            <div className="flex items-center space-x-3">
+              <Calendar className="w-4 h-4 text-gray-500" />
+              <select
+                value={dateFilter}
+                onChange={(e) => setDateFilter(e.target.value)}
+                className="border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
+              >
+                <option value="1month">Last 1 Month</option>
+                <option value="3months">Last 3 Months</option>
+                <option value="6months">Last 6 Months</option>
+                <option value="12months">Last 12 Months</option>
+                <option value="all">All Time</option>
+              </select>
             </div>
           </div>
         </div>
