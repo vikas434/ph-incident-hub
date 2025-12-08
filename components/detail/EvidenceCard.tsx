@@ -126,12 +126,15 @@ export default function EvidenceCard({ evidence, index = 0 }: EvidenceCardProps)
             {/* First two items show "Customer Reported" if program is Customer Reported */}
             {/* Index 2 shows "Deluxing" if program is Deluxing */}
             {/* Index 3 shows "Inbound QC" */}
+            {/* Index 4 shows "Asia Inspection" */}
             {index < 2 && evidence.program === "Customer Reported"
               ? "Customer Reported"
               : index === 2 && evidence.program === "Deluxing"
               ? "Deluxing"
               : index === 3
               ? "Inbound QC"
+              : index === 4
+              ? "Asia Inspection"
               : getOverlayText(evidence.defectType)}
           </span>
         </div>
