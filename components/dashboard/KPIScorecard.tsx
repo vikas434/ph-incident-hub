@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { AlertTriangle, Eye, TrendingDown, Package, DollarSign, Target, Clock } from "lucide-react";
+import { AlertTriangle, Eye, TrendingDown, Package, DollarSign, Target } from "lucide-react";
 import KPICard from "./KPICard";
 
 interface KPIs {
@@ -111,7 +111,7 @@ export default function KPIScorecard() {
       
       {/* Secondary Metrics Row */}
       {kpis.avgIncidentRate !== undefined && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <KPICard
             label="Avg Incident Rate"
             value={`${kpis.avgIncidentRate?.toFixed(1) || 0}%`}
@@ -129,15 +129,6 @@ export default function KPIScorecard() {
             trend={-15.8}
             trendLabel="vs last month"
             subtitle="All programs combined"
-          />
-          <KPICard
-            label="Avg Resolution Time"
-            value={kpis.avgResolutionTime ? `${kpis.avgResolutionTime} days` : "N/A"}
-            icon={Clock}
-            bgColor="bg-teal-50"
-            trend={-22.4}
-            trendLabel="vs last quarter"
-            subtitle="Time to resolution"
           />
         </div>
       )}
