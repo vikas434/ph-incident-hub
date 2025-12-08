@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { AlertTriangle, Eye, TrendingDown, Package, DollarSign, Target } from "lucide-react";
+import { AlertTriangle, Eye, TrendingDown, Package, Target } from "lucide-react";
 import KPICard from "./KPICard";
 
 interface KPIs {
