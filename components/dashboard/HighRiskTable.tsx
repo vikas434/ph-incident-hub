@@ -232,7 +232,22 @@ export default function HighRiskTable() {
                   <div className="flex items-start space-x-2">
                     <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
                     <div className="flex-1">
-                      <span className="text-sm text-gray-900 font-medium block">{sku.aiInsight.split(' • ')[0]}</span>
+                      <div className="flex items-center space-x-1 group relative">
+                        <span className="text-sm text-gray-900 font-medium block">{sku.aiInsight.split(' • ')[0]}</span>
+                        <div className="w-3 h-3 rounded-full bg-purple-100 flex items-center justify-center cursor-help">
+                          <span className="text-xs text-purple-600 font-bold">?</span>
+                        </div>
+                        <div className="absolute left-0 top-full mt-2 w-80 p-3 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 shadow-xl">
+                          <p className="font-semibold mb-2">AI Insight Calculation</p>
+                          <p className="mb-2">For critical products (Yellow Zone), numbers are enhanced for visibility:</p>
+                          <ul className="list-disc list-inside space-y-1 ml-2 mb-2">
+                            <li><strong>Incident Count:</strong> Base count from data, boosted for critical products</li>
+                            <li><strong>Financial Impact:</strong> Base deductions × 1000 × multiplier</li>
+                            <li><strong>Multipliers:</strong> 1.5x for 5+ incidents, 1.2x for 3+ incidents</li>
+                          </ul>
+                          <p className="text-purple-300 text-xs mt-2">Example: $12.11 deduction → $12,110 × 1.5 = $18,165</p>
+                        </div>
+                      </div>
                       {sku.aiInsight.includes(' • ') && (
                         <span className="text-xs text-gray-500 mt-1 block">
                           {sku.aiInsight.split(' • ').slice(1).join(' • ')}
