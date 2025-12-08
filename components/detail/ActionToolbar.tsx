@@ -20,7 +20,8 @@ export default function ActionToolbar({ onLimitChange }: ActionToolbarProps) {
   const { showToast } = useToast();
 
   const handleLimitChange = (value: string) => {
-    const numValue = value === "all" ? null : parseInt(value);
+    // When "All" is selected, set to 50 items by default
+    const numValue = value === "all" ? 50 : parseInt(value);
     setLimit(numValue);
     onLimitChange(numValue);
   };

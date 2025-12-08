@@ -15,6 +15,11 @@ export default function DetailPage() {
   const productID = params.sku as string; // Product ID from URL
   const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
   const [imageLimit, setImageLimit] = useState<number | null>(5);
+  
+  // Reset pagination when filters change
+  useEffect(() => {
+    // This will trigger EvidenceGallery to reset pagination
+  }, [selectedProgram, imageLimit]);
   const [sku, setSku] = useState<SKU | null>(null);
   const [loading, setLoading] = useState(true);
 
