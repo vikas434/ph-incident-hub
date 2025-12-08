@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, ChevronRight, Sparkles, Loader2, Calendar } from "lucide-react";
+import { CheckCircle2, ChevronRight, Sparkles, Loader2, Calendar, ArrowUpDown } from "lucide-react";
 import { SKU } from "@/lib/types";
 import Badge from "@/components/ui/Badge";
 import Image from "next/image";
@@ -13,6 +13,7 @@ export default function HighRiskTable() {
   const [loading, setLoading] = useState(true);
   const [analyzingSkuId, setAnalyzingSkuId] = useState<string | null>(null);
   const [dateFilter, setDateFilter] = useState<string>("12months"); // Default: Last 12 months
+  const [sortBy, setSortBy] = useState<string>("exposure"); // Default: Sort by GIE Exposure
 
   useEffect(() => {
     fetch('/api/skus')
@@ -72,9 +73,24 @@ export default function HighRiskTable() {
     });
   }, [skus, dateFilter]);
 
-  const highRiskSKUs = filteredSKUs
-    .sort((a, b) => b.financialExposure - a.financialExposure) // Sort by GIE Exposure descending (highest impact first)
-    .slice(0, 15); // Top 15 high-risk
+  const highRiskSKUs = useMemo(() => {
+    let sorted = [...filteredSKUs];
+    
+    // Apply sorting based on selected option
+    if (sortBy === "sku") {
+      // Sort alphabetically by SKU number
+      sorted.sort((a, b) => {
+        const skuA = a.sku || a.name || "";
+        const skuB = b.sku || b.name || "";
+        return skuA.localeCompare(skuB);
+      });
+    } else {
+      // Default: Sort by GIE Exposure descending (highest impact first)
+      sorted.sort((a, b) => b.financialExposure - a.financialExposure);
+    }
+    
+    return sorted.slice(0, 15); // Top 15 high-risk
+  }, [filteredSKUs, sortBy]);
 
   if (loading) {
     return (
@@ -179,19 +195,32 @@ export default function HighRiskTable() {
                 Sorted by GIE Exposure (highest financial impact first)
               </p>
             </div>
-            <div className="flex items-center space-x-3">
-              <Calendar className="w-4 h-4 text-gray-500" />
-              <select
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value)}
-                className="border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
-              >
-                <option value="1month">Last 1 Month</option>
-                <option value="3months">Last 3 Months</option>
-                <option value="6months">Last 6 Months</option>
-                <option value="12months">Last 12 Months</option>
-                <option value="all">All Time</option>
-              </select>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <ArrowUpDown className="w-4 h-4 text-gray-500" />
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
+                >
+                  <option value="exposure">Sort by GIE Exposure</option>
+                  <option value="sku">Sort by SKU Number</option>
+                </select>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Calendar className="w-4 h-4 text-gray-500" />
+                <select
+                  value={dateFilter}
+                  onChange={(e) => setDateFilter(e.target.value)}
+                  className="border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
+                >
+                  <option value="1month">Last 1 Month</option>
+                  <option value="3months">Last 3 Months</option>
+                  <option value="6months">Last 6 Months</option>
+                  <option value="12months">Last 12 Months</option>
+                  <option value="all">All Time</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
