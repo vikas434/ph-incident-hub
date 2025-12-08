@@ -171,10 +171,10 @@ export function generateSummary(group: ProductGroup): SummaryResult {
     : displayIncidentCount > 1 ? 'Multiple Incidents' 
     : 'Single Incident';
   
-  // Generate insight with boosted numbers for critical products
+  // Generate insight with boosted numbers for critical products (without financial impact)
   const aiInsight = displayIncidentCount > 1 
-    ? `${severityLevel} • ${displayIncidentCount} incidents • ${financialImpactFormatted} impact`
-    : `Single Incident • ${financialImpactFormatted} impact`;
+    ? `${severityLevel} • ${displayIncidentCount} incidents`
+    : `Single Incident`;
   
   const aiRootCause = generateRootCause(group);
   
