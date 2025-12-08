@@ -80,12 +80,6 @@ export default function IntelligenceSidebar({
           Product Information
         </h3>
         <div className="space-y-3">
-          {sku.poNumber && (
-            <div className="flex flex-col">
-              <span className="text-xs text-gray-500 mb-1">PO Number</span>
-              <span className="text-sm font-medium text-gray-900">{sku.poNumber}</span>
-            </div>
-          )}
           {sku.wayfairSKU && (
             <div className="flex flex-col">
               <span className="text-xs text-gray-500 mb-1">Wayfair SKU</span>
