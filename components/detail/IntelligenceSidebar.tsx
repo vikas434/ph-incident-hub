@@ -49,79 +49,17 @@ export default function IntelligenceSidebar({
   onProgramChange,
 }: IntelligenceSidebarProps) {
   // Count incidents per program from actual evidence
-  const actualProgramCounts = sku.evidence.reduce((acc, ev) => {
+  const programCounts = sku.evidence.reduce((acc, ev) => {
     acc[ev.program] = (acc[ev.program] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
 
-  // Generate realistic program flags with varied incident counts
-  // Distribute incidents across multiple programs to make it look more realistic
-  const totalIncidents = sku.evidence.length;
-  const realisticProgramCounts: Record<string, number> = {};
-  
-  // Start with actual program counts
-  Object.assign(realisticProgramCounts, actualProgramCounts);
-  
-  // For critical SKUs, add more diverse program flags with realistic counts
-  if (sku.isCritical && totalIncidents > 0) {
-    const programsToShow = sku.programsFlagged.length > 0 
-      ? [...sku.programsFlagged] 
-      : ALL_PROGRAMS.slice(0, Math.min(4, ALL_PROGRAMS.length));
-    
-    // Distribute incidents across programs with varied counts
-    let remainingIncidents = totalIncidents;
-    const distributedPrograms: Program[] = [];
-    
-    // Ensure we have at least 3-5 different programs flagged
-    const targetProgramCount = Math.min(5, Math.max(3, Math.ceil(totalIncidents / 2)));
-    const programsToDistribute = [...new Set([...programsToShow, ...ALL_PROGRAMS])].slice(0, targetProgramCount);
-    
-    programsToDistribute.forEach((program, index) => {
-      if (remainingIncidents <= 0) return;
-      
-      // Create varied distribution: first programs get more, later ones get fewer
-      let count: number;
-      if (index === 0) {
-        // First program gets the most (30-40% of total)
-        count = Math.max(1, Math.floor(totalIncidents * 0.35));
-      } else if (index === 1) {
-        // Second program gets second most (20-30%)
-        count = Math.max(1, Math.floor(totalIncidents * 0.25));
-      } else if (index === 2) {
-        // Third program gets moderate (15-20%)
-        count = Math.max(1, Math.floor(totalIncidents * 0.18));
-      } else {
-        // Remaining programs get smaller counts (5-10% each)
-        const avgRemaining = Math.floor(remainingIncidents / (programsToDistribute.length - index));
-        count = Math.max(1, Math.min(avgRemaining, Math.floor(totalIncidents * 0.1)));
-      }
-      
-      count = Math.min(count, remainingIncidents);
-      if (count > 0) {
-        realisticProgramCounts[program] = (realisticProgramCounts[program] || 0) + count;
-        remainingIncidents -= count;
-        distributedPrograms.push(program);
-      }
-    });
-    
-    // Add any remaining incidents to the first program
-    if (remainingIncidents > 0 && distributedPrograms.length > 0) {
-      realisticProgramCounts[distributedPrograms[0]] = (realisticProgramCounts[distributedPrograms[0]] || 0) + remainingIncidents;
-    }
-  }
-  
-  // Get programs that have counts > 0 for display
-  const programsFlagged = Object.keys(realisticProgramCounts)
-    .filter(prog => realisticProgramCounts[prog] > 0)
-    .map(prog => prog as Program)
-    .slice(0, 8); // Limit to top 8 programs for display
+  // Use actual programs flagged from SKU data
+  const programsFlagged = sku.programsFlagged || [];
 
   // Include all possible programs, even if they have zero counts
   const allPrograms = ["All", ...ALL_PROGRAMS];
   const totalCount = sku.evidence.length;
-  
-  // Use realistic counts for filter display
-  const programCounts = realisticProgramCounts;
 
   return (
     <div className="space-y-6">
