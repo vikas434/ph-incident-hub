@@ -88,23 +88,26 @@ function generateRootCause(group: ProductGroup): string {
   
   const issues: string[] = [];
   
+  // Cap incident counts at 5 for display purposes
+  const capIncidentCount = (count: number) => Math.min(count, 5);
+  
   if (structuralIssues > 0) {
-    issues.push(`Structural damage (cracks, breaks) reported in ${structuralIssues} incident(s)`);
+    issues.push(`Structural damage (cracks, breaks) reported in ${capIncidentCount(structuralIssues)} incident(s)`);
   }
   if (surfaceIssues > 0) {
-    issues.push(`Surface defects (scratches, dents, chips) in ${surfaceIssues} incident(s)`);
+    issues.push(`Surface defects (scratches, dents, chips) in ${capIncidentCount(surfaceIssues)} incident(s)`);
   }
   if (finishIssues > 0) {
-    issues.push(`Finish quality issues (peeling, discoloration) in ${finishIssues} incident(s)`);
+    issues.push(`Finish quality issues (peeling, discoloration) in ${capIncidentCount(finishIssues)} incident(s)`);
   }
   if (assemblyIssues > 0) {
-    issues.push(`Assembly/misalignment problems in ${assemblyIssues} incident(s)`);
+    issues.push(`Assembly/misalignment problems in ${capIncidentCount(assemblyIssues)} incident(s)`);
   }
   if (materialIssues > 0) {
-    issues.push(`Material defects (splinters, tears) in ${materialIssues} incident(s)`);
+    issues.push(`Material defects (splinters, tears) in ${capIncidentCount(materialIssues)} incident(s)`);
   }
   if (contaminationIssues > 0) {
-    issues.push(`Contamination issues (odor, mold, water damage) in ${contaminationIssues} incident(s)`);
+    issues.push(`Contamination issues (odor, mold, water damage) in ${capIncidentCount(contaminationIssues)} incident(s)`);
   }
   
   // Build root cause summary
