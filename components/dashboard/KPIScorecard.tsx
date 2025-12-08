@@ -38,18 +38,6 @@ export default function KPIScorecard() {
         setLoading(false);
       });
   }, []);
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
-    })
-      .format(value / 1000000)
-      .replace("$", "$")
-      .replace(/\.0$/, "") + "M";
-  };
-
   const formatNumber = (value: number) => {
     if (value >= 1000000) {
       return (value / 1000000).toFixed(1) + "M";
@@ -73,8 +61,6 @@ export default function KPIScorecard() {
   // Calculate realistic trends (simulated for executive presentation)
   const criticalTrend = kpis.criticalSKUs > 0 ? -12.5 : 0; // Improvement trend
   const photosTrend = kpis.photosAnalyzed > 0 ? 18.3 : 0; // Growth trend
-  const gieTrend = kpis.gieOpportunity > 0 ? -8.7 : 0; // Reduction trend (good)
-  const suppliersTrend = kpis.suppliersAffected > 0 ? 5.2 : 0; // Slight increase
 
   return (
     <div className="space-y-6 mb-8">
