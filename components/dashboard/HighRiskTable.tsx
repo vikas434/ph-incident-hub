@@ -12,7 +12,7 @@ export default function HighRiskTable() {
   const [skus, setSkus] = useState<SKU[]>([]);
   const [loading, setLoading] = useState(true);
   const [analyzingSkuId, setAnalyzingSkuId] = useState<string | null>(null);
-  const [dateFilter, setDateFilter] = useState<string>("6months"); // Default: Last 6 months
+  const [dateFilter, setDateFilter] = useState<string>("12months"); // Default: Last 12 months
 
   useEffect(() => {
     fetch('/api/skus')
