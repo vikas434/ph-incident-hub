@@ -4,9 +4,18 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { Download, Share2, Loader2, Mail, Copy, Check, X } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
+import { Evidence } from "@/lib/types";
 
 interface ActionToolbarProps {
   onLimitChange: (limit: number | null) => void;
+  skuData?: {
+    name: string;
+    sku: string;
+    wayfairSKU?: string;
+    productID?: string;
+    manufacturer: string;
+    evidence: Evidence[];
+  };
 }
 
 export default function ActionToolbar({ onLimitChange, skuData }: ActionToolbarProps) {
