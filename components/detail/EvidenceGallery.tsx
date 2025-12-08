@@ -21,16 +21,16 @@ export default function EvidenceGallery({ evidence }: EvidenceGalleryProps) {
     );
   }
 
+  // Reset to page 1 when evidence changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [evidence.length]);
+
   // Calculate pagination
   const totalPages = Math.ceil(evidence.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentEvidence = evidence.slice(startIndex, endIndex);
-
-  // Reset to page 1 if current page is out of bounds
-  if (currentPage > totalPages && totalPages > 0) {
-    setCurrentPage(1);
-  }
 
   const handlePrevious = () => {
     setCurrentPage((prev) => Math.max(1, prev - 1));
