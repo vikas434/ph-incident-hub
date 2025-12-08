@@ -166,7 +166,11 @@ export default function SharePage() {
             <select
               id="limit-select"
               value={imageLimit === null ? "all" : imageLimit.toString()}
-              onChange={(e) => setImageLimit(e.target.value === "all" ? null : parseInt(e.target.value))}
+              onChange={(e) => {
+                // When "All" is selected, set to 50 items by default
+                const value = e.target.value === "all" ? 50 : parseInt(e.target.value);
+                setImageLimit(value);
+              }}
               className="border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
               <option value="5">Top 5</option>
