@@ -80,7 +80,7 @@ export default function ExecutiveSummary() {
               Executive Dashboard Summary
             </h2>
             <p className="text-sm text-gray-600">
-              Real-time quality insights for ABC Manufacturer • Partner Home Portal
+              Real-time quality insights for XYZ Supplier • Partner Home Portal
             </p>
           </div>
           <div className="flex items-center space-x-2 text-sm text-gray-600">
