@@ -59,6 +59,14 @@ export default function IntelligenceSidebar({
   const programsFlagged = sku.programsFlagged && sku.programsFlagged.length > 0 
     ? sku.programsFlagged 
     : ALL_PROGRAMS.filter(program => (programCounts[program] || 0) > 0);
+  
+  // Ensure each program in programsFlagged shows at least 1 incident count
+  // This makes the demo more realistic - if a program is flagged, it should have at least 1 incident
+  programsFlagged.forEach(program => {
+    if (!programCounts[program] || programCounts[program] === 0) {
+      programCounts[program] = 1;
+    }
+  });
 
   // Include all possible programs, even if they have zero counts
   const allPrograms = ["All", ...ALL_PROGRAMS];
