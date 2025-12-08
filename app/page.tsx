@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { isAuthenticated, getSupplierName } from "@/lib/auth";
 import KPIScorecard from "@/components/dashboard/KPIScorecard";
 import HighRiskTable from "@/components/dashboard/HighRiskTable";
-import ExecutiveSummary from "@/components/dashboard/ExecutiveSummary";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -32,7 +31,6 @@ export default function Dashboard() {
           </p>
         </div>
         
-        <ExecutiveSummary />
         <KPIScorecard />
         <HighRiskTable />
       </div>
