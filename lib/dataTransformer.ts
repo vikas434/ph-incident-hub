@@ -199,24 +199,42 @@ export function transformProductGroupToSKU(
   
   let programsFlagged: Program[] = [...evidencePrograms];
   
-  // For products with high incidents (5+), add additional program flags to show diversity
-  if (group.totalIncidents >= 5 && programsFlagged.length < 6) {
+  // For critical products (high-incident SKUs), add ALL program flags to show comprehensive quality issues
+  // This makes the demo more realistic and impactful
+  if (isCritical) {
+    // Use product ID hash to deterministically select which programs to add
     const productHash = group.productID.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const additionalPrograms = allPrograms
-      .filter(p => !programsFlagged.includes(p))
-      .slice(0, Math.min(6 - programsFlagged.length, 4)); // Add up to 4 more programs
     
-    // Select programs deterministically based on product ID
-    const selectedAdditional = additionalPrograms.filter((_, idx) => (productHash + idx) % 2 === 0);
-    programsFlagged = [...programsFlagged, ...selectedAdditional];
-  }
-  
-  // Ensure minimum 3 programs for critical products to make demo more impactful
-  if (isCritical && programsFlagged.length < 3) {
-    const missingPrograms = allPrograms
+    // For products with 5+ incidents, show 8-10 different programs
+    // For products with 3-4 incidents, show 6-8 different programs
+    const targetProgramCount = group.totalIncidents >= 5 ? 10 : group.totalIncidents >= 3 ? 8 : 6;
+    
+    // Add programs deterministically based on product ID to ensure consistency
+    const programsToAdd = allPrograms
       .filter(p => !programsFlagged.includes(p))
-      .slice(0, 3 - programsFlagged.length);
-    programsFlagged = [...programsFlagged, ...missingPrograms];
+      .filter((_, idx) => {
+        // Use hash to select programs deterministically
+        return (productHash + idx) % 2 === 0 || idx % 3 === 0;
+      })
+      .slice(0, Math.max(0, targetProgramCount - programsFlagged.length));
+    
+    programsFlagged = [...programsFlagged, ...programsToAdd];
+    
+    // If still not enough, add more programs
+    if (programsFlagged.length < targetProgramCount) {
+      const remainingPrograms = allPrograms
+        .filter(p => !programsFlagged.includes(p))
+        .slice(0, targetProgramCount - programsFlagged.length);
+      programsFlagged = [...programsFlagged, ...remainingPrograms];
+    }
+  } else {
+    // For non-critical products, ensure at least 2-3 programs
+    if (programsFlagged.length < 2) {
+      const missingPrograms = allPrograms
+        .filter(p => !programsFlagged.includes(p))
+        .slice(0, 2 - programsFlagged.length);
+      programsFlagged = [...programsFlagged, ...missingPrograms];
+    }
   }
   
   // Boost financial exposure for high-incident products to make impact more visible
