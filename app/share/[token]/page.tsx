@@ -263,8 +263,8 @@ export default function SharePage() {
         program = firstFivePrograms[index];
       } else {
         // For items beyond 5, use scenario program or fall back to available programs
-        program = scenario.program;
-        if (!programsToUse.includes(program as Program)) {
+        program = scenario.program as Program;
+        if (!programsToUse.includes(program)) {
           const programIndex = index % programsToUse.length;
           program = programsToUse[programIndex];
         }
