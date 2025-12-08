@@ -26,7 +26,7 @@ export default function LoginPage() {
       // Store authentication state
       localStorage.setItem("supplier_authenticated", "true");
       localStorage.setItem("supplier_email", email);
-      localStorage.setItem("supplier_name", "ABC Manufacturer");
+      localStorage.setItem("supplier_name", "XYZ Supplier");
       
       // Redirect to dashboard
       router.push("/");

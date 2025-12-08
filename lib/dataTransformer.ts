@@ -228,7 +228,7 @@ export function transformProductGroupToSKU(
     id: group.productID,
     sku: group.productID,
     name: group.wayfairSKU || `Product ${group.productID}`,
-    manufacturer: 'ABC Manufacturer', // Hardcoded as per user request
+    manufacturer: 'XYZ Supplier', // Hardcoded as per user request
     thumbnail: getThumbnail(imageURLs),
     isCritical,
     photoVolume: imageURLs.length,

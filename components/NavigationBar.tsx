@@ -10,13 +10,13 @@ export default function NavigationBar() {
   const router = useRouter();
   const pathname = usePathname();
   const [authenticated, setAuthenticated] = useState(false);
-  const [supplierName, setSupplierName] = useState("ABC Manufacturer");
+  const [supplierName, setSupplierName] = useState("XYZ Supplier");
 
   // Always call hooks in the same order - no conditional returns before hooks
   useEffect(() => {
     const authStatus = isAuthenticated();
     setAuthenticated(authStatus);
-    setSupplierName(getSupplierName() || "ABC Manufacturer");
+    setSupplierName(getSupplierName() || "XYZ Supplier");
     
     // Redirect to login if not authenticated (but not if already on login page)
     if (!authStatus && pathname !== "/login") {

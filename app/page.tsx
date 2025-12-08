@@ -8,13 +8,13 @@ import HighRiskTable from "@/components/dashboard/HighRiskTable";
 
 export default function Dashboard() {
   const router = useRouter();
-  const [supplierName, setSupplierName] = useState("ABC Manufacturer");
+  const [supplierName, setSupplierName] = useState("XYZ Supplier");
 
   useEffect(() => {
     if (!isAuthenticated()) {
       router.push("/login");
     } else {
-      setSupplierName(getSupplierName() || "ABC Manufacturer");
+      setSupplierName(getSupplierName() || "XYZ Supplier");
     }
   }, [router]);
 

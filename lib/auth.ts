@@ -13,7 +13,7 @@ export function getSupplierEmail(): string | null {
 
 export function getSupplierName(): string | null {
   if (typeof window === "undefined") return null;
-  return localStorage.getItem("supplier_name") || "ABC Manufacturer";
+  return localStorage.getItem("supplier_name") || "XYZ Supplier";
 }
 
 export function logout(): void {
