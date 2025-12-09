@@ -204,31 +204,31 @@ export default function IntelligenceSidebar({
             
             return (
               <div key={program} className="group relative">
-                <button
-                  onClick={() => onProgramChange(program === "All" ? null : program)}
+              <button
+                onClick={() => onProgramChange(program === "All" ? null : program)}
                   className={`w-full text-left px-4 py-3 rounded-md transition-all ${
-                    isActive
+                  isActive
                       ? programColors 
                         ? `${programColors.bg} border-2 ${programColors.border} ${programColors.text}`
                         : "bg-purple-50 border-2 border-purple-600 text-purple-900"
                       : "bg-white border border-slate-200 text-gray-700 hover:bg-slate-50 hover:shadow-sm"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">{program}</span>
-                    <span
-                      className={`text-xs px-2 py-1 rounded-full ${
-                        isActive
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">{program}</span>
+                  <span
+                    className={`text-xs px-2 py-1 rounded-full ${
+                      isActive
                           ? programColors
                             ? `${programColors.bg} ${programColors.text} border ${programColors.border}`
                             : "bg-purple-600 text-white"
-                          : "bg-slate-100 text-gray-600"
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  </div>
-                </button>
+                        : "bg-slate-100 text-gray-600"
+                    }`}
+                  >
+                    {count}
+                  </span>
+                </div>
+              </button>
                 {/* Tooltip on hover */}
                 <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 shadow-lg">
                   {getTooltipText(program)}

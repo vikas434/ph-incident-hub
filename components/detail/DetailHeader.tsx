@@ -48,3 +48,4 @@ export default function DetailHeader({ sku, name, manufacturer, poNumber, wayfai
   );
 }
 
+

@@ -162,14 +162,14 @@ export default function HighRiskTable() {
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow-sm border border-slate-200">
-        <div className="px-6 py-4 border-b border-slate-200">
+    <div className="bg-white rounded-lg shadow-sm border border-slate-200">
+      <div className="px-6 py-4 border-b border-slate-200">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center space-x-2">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  High Incident SKU List
-                </h2>
+        <h2 className="text-lg font-semibold text-gray-900">
+                  High incident Product Id list
+        </h2>
                 <div className="group relative">
                   <div className="w-4 h-4 rounded-full bg-yellow-100 flex items-center justify-center cursor-help">
                     <span className="text-xs text-yellow-600 font-bold">?</span>
@@ -214,8 +214,8 @@ export default function HighRiskTable() {
               </div>
             </div>
           </div>
-        </div>
-        <div className="overflow-x-auto">
+      </div>
+      <div className="overflow-x-auto">
         <table className="w-full">
           <thead className="bg-slate-50">
             <tr>
@@ -266,8 +266,8 @@ export default function HighRiskTable() {
                     {sku.programsFlagged.map((program, idx) => {
                       const colors = getProgramColor(program);
                       return (
-                        <div
-                          key={idx}
+                      <div
+                        key={idx}
                           className={`group relative inline-flex items-center px-2.5 py-1 rounded-md border ${colors.bg} ${colors.border} ${colors.text} text-xs font-medium cursor-help transition-all hover:scale-105 hover:shadow-sm`}
                           title={`${program} - Click to filter by this program`}
                         >
@@ -298,7 +298,7 @@ export default function HighRiskTable() {
                       {sku.aiInsight.includes(' • ') && (
                         <span className="text-xs text-gray-500 mt-1 block">
                           {sku.aiInsight.split(' • ').slice(1).join(' • ')}
-                        </span>
+                  </span>
                       )}
                     </div>
                   </div>
@@ -316,8 +316,8 @@ export default function HighRiskTable() {
                       </>
                     ) : (
                       <>
-                        Analyze
-                        <ChevronRight className="w-4 h-4 ml-1" />
+                    Analyze
+                    <ChevronRight className="w-4 h-4 ml-1" />
                       </>
                     )}
                   </button>

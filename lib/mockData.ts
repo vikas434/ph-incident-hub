@@ -260,3 +260,4 @@ export const aggregateKPIs = {
   suppliersAffected: new Set(mockSKUs.map((sku) => sku.manufacturer)).size,
 };
 
+
